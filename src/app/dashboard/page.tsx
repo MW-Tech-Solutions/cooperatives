@@ -5,10 +5,8 @@ import { UserRole } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { 
   TrendingUp, 
-  Users, 
   CreditCard, 
   ArrowUpRight, 
-  ArrowDownRight, 
   AlertCircle 
 } from 'lucide-react';
 import { 
