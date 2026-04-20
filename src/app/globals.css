@@ -25,11 +25,6 @@
     --input: 217 32% 17%;
     --ring: 224.3 76.3% 48%;
     --radius: 0.75rem;
-    --chart-1: 217 91% 60%;
-    --chart-2: 161 72% 41%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
   }
 }
 
@@ -38,9 +33,21 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-body;
+    @apply bg-background text-foreground font-body antialiased;
   }
   h1, h2, h3, h4, h5, h6 {
-    @apply font-headline;
+    @apply font-headline tracking-tight;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-white/5 backdrop-blur-md border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)];
+  }
+  .glass-sidebar {
+    @apply bg-card/80 backdrop-blur-xl border-r border-white/5;
+  }
+  .glass-header {
+    @apply bg-background/50 backdrop-blur-lg border-b border-white/10;
   }
 }
