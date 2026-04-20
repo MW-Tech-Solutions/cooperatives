@@ -372,7 +372,7 @@ export default function CommandCenter() {
                     <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                       <div>
                         <p className="font-bold">{type.name}</p>
-                        <p className="text-xs text-muted-foreground">{type.interestRate}% {type.interestType} Interest • {type.guarantorsRequired} Guarantors Needed</p>
+                        <p className="text-xs text-muted-foreground">{type.interestRate}% {type.interestType} Interest {'•'} {type.guarantorsRequired} Guarantors Needed</p>
                       </div>
                       <Button variant="ghost" size="icon" className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
                     </div>

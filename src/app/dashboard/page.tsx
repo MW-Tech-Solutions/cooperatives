@@ -94,7 +94,7 @@ export default function DashboardOverview() {
 
       // Update Firestore status
       const loanRef = doc(db, 'loans', loan.id);
-      await updateDoc(loanRef, {
+      updateDoc(loanRef, {
         status: 'AWAITING_GUARANTORS',
         notificationsSentAt: new Date().toISOString()
       });
@@ -227,7 +227,7 @@ export default function DashboardOverview() {
               <CardContent className="space-y-3">
                 {[1,2,3,4].map(i => (
                   <div key={i} className="text-xs font-mono p-3 bg-white/5 rounded-lg border border-white/5 flex items-center justify-between">
-                    <span className="text-muted-foreground">[2025-03-01 09:15:42] CONFIG_CHANGE: LOAN_MULTIPLIER (3x -> 3.5x)</span>
+                    <span className="text-muted-foreground">[2025-03-01 09:15:42] CONFIG_CHANGE: LOAN_MULTIPLIER (3x {'->'} 3.5x)</span>
                     <span className="text-[9px] uppercase border px-1 rounded opacity-50">Verified</span>
                   </div>
                 ))}
