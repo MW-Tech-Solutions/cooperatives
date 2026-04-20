@@ -151,7 +151,7 @@ export default function CommandCenter() {
               <Button size="sm" className="gap-2">
                 <Plus className="w-4 h-4" /> Create Product
               </Button>
-            </Header>
+            </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
