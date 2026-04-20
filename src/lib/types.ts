@@ -7,6 +7,17 @@ export type UserRole =
   | 'AUDITOR' 
   | 'MEMBER';
 
+export type InterestType = 'FLAT' | 'REDUCING';
+
+export interface LoanType {
+  id: string;
+  name: string;
+  interestRate: number;
+  interestType: InterestType;
+  maxDurationMonths: number;
+  minSavingsMonths: number;
+}
+
 export interface User {
   id: string;
   name: string;
@@ -16,6 +27,7 @@ export interface User {
   totalSavings: number;
   joinDate: string;
   status: 'Active' | 'Pending' | 'Inactive';
+  paystackAuthCode?: string;
 }
 
 export interface SystemSettings {
@@ -28,6 +40,8 @@ export interface SystemSettings {
   paystackPublicKey: string;
   paystackSecretKey: string;
   isAutoDebitActive: boolean;
+  loanTypes: LoanType[];
+  totalPoolLiquidity: number;
 }
 
 export interface Loan {
@@ -35,16 +49,21 @@ export interface Loan {
   userId: string;
   memberName: string;
   amount: number;
-  type: string;
-  status: 'AWAITING_APPROVAL' | 'DISBURSED' | 'REJECTED' | 'PAID';
+  loanTypeId: string;
+  status: 'AWAITING_APPROVAL' | 'SECRETARY_VERIFIED' | 'TREASURER_APPROVED' | 'DISBURSED' | 'REJECTED' | 'PAID';
   createdAt: string;
+  repaymentSchedule: {
+    dueDate: string;
+    amount: number;
+    status: 'PENDING' | 'PAID' | 'OVERDUE';
+  }[];
 }
 
 export interface Contribution {
   id: string;
   userId: string;
   amount: number;
-  type: string;
+  type: 'MONTHLY' | 'SPECIAL' | 'LEVY';
   date: string;
   status: 'SUCCESS' | 'FAILED' | 'PENDING';
 }
@@ -53,7 +72,9 @@ export interface AuditLog {
   id: string;
   action: string;
   actor: string;
+  actorRole: UserRole;
   target: string;
   timestamp: string;
   status: 'VERIFIED' | 'FLAGGED';
+  metadata?: any;
 }
