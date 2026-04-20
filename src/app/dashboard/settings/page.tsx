@@ -1,9 +1,8 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -21,6 +20,7 @@ import {
   Info
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 export default function CommandCenter() {
   const { toast } = useToast();
@@ -151,7 +151,7 @@ export default function CommandCenter() {
               <Button size="sm" className="gap-2">
                 <Plus className="w-4 h-4" /> Create Product
               </Button>
-            </CardHeader>
+            </Header>
             <CardContent>
               <Table>
                 <TableHeader>

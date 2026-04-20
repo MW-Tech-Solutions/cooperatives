@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect, useState } from 'react';
@@ -20,9 +19,8 @@ import {
   CartesianGrid, 
   Tooltip, 
   ResponsiveContainer, 
-  LineChart, 
-  Line 
 } from 'recharts';
+import { cn } from '@/lib/utils';
 
 const data = [
   { name: 'Jan', total: 4000 },
@@ -41,9 +39,6 @@ export default function DashboardOverview() {
   }, []);
 
   if (!role) return null;
-
-  const isAdmin = role === 'PRESIDENT' || role === 'ASSISTANT_PRESIDENT';
-  const isFinancial = role === 'TREASURER' || role === 'AUDITOR' || role === 'PRESIDENT';
 
   return (
     <div className="space-y-8">
