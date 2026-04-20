@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect, useState } from 'react';
@@ -29,12 +28,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex min-h-screen bg-slate-950">
       <DashboardSidebar role={role} />
-      <div className="flex-1 flex flex-col">
-        <header className="h-16 border-b border-white/5 bg-card/30 backdrop-blur-md flex items-center justify-between px-8 sticky top-0 z-40">
-          <div>
-            <h2 className="text-sm font-medium text-muted-foreground">{roleLabels[role]}</h2>
+      <div className="flex-1 flex flex-col min-w-0">
+        <header className="h-16 border-b border-white/5 bg-card/30 backdrop-blur-md flex items-center justify-between px-4 sm:px-8 sticky top-0 z-40">
+          <div className="truncate pr-2">
+            <h2 className="text-xs sm:text-sm font-medium text-muted-foreground">{roleLabels[role]}</h2>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
             <button className="p-2 text-muted-foreground hover:text-white transition-colors relative">
               <Bell className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
@@ -51,7 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             </div>
           </div>
         </header>
-        <main className="flex-1 p-8 overflow-auto">
+        <main className="flex-1 p-4 sm:p-8 overflow-auto pb-24 md:pb-8">
           {children}
         </main>
       </div>
