@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useMemo } from 'react';
@@ -20,6 +19,7 @@ import {
 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import { motion } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 const ledgerData = [
   { id: 'TX-101', member: 'Amina Bello', amount: 250000, type: 'LOAN_DISBURSEMENT', date: '2025-03-01', status: 'COMPLETED' },
