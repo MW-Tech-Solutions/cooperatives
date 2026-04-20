@@ -21,9 +21,11 @@ import { motion } from 'framer-motion';
 
 interface SidebarProps {
   role: UserRole;
+  systemName?: string;
+  logoUrl?: string;
 }
 
-export function DashboardSidebar({ role }: SidebarProps) {
+export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: SidebarProps) {
   const pathname = usePathname();
 
   const navItems = [
@@ -46,11 +48,15 @@ export function DashboardSidebar({ role }: SidebarProps) {
           <Link href="/dashboard" className="flex items-center gap-3 group">
             <motion.div 
               whileHover={{ rotate: 180 }}
-              className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30"
+              className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/30 shrink-0"
             >
-              <Sparkles className="w-6 h-6 text-white" />
+              {logoUrl ? (
+                <img src={logoUrl} alt="Logo" className="w-6 h-6 rounded" />
+              ) : (
+                <Sparkles className="w-6 h-6 text-white" />
+              )}
             </motion.div>
-            <span className="text-2xl font-headline font-bold tracking-tighter">CoopNest</span>
+            <span className="text-2xl font-headline font-bold tracking-tighter truncate">{systemName}</span>
           </Link>
         </div>
         
@@ -81,7 +87,7 @@ export function DashboardSidebar({ role }: SidebarProps) {
         <div className="p-6 mt-auto">
           <div className="p-4 rounded-2xl bg-white/5 border border-white/5 mb-6">
             <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Active Authority</p>
-            <p className="text-xs font-bold text-primary">{role.replace('_', ' ')}</p>
+            <p className="text-xs font-bold text-primary truncate">{role.replace('_', ' ')}</p>
           </div>
           <Link 
             href="/login"
@@ -93,9 +99,9 @@ export function DashboardSidebar({ role }: SidebarProps) {
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation - Sticky & Non-Movable */}
+      {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] h-20 bg-card/80 backdrop-blur-2xl border-t border-white/10 flex items-stretch px-2 pb-safe shadow-[0_-10px_30px_rgba(0,0,0,0.5)]">
-        {filteredItems.map((item) => (
+        {filteredItems.slice(0, 5).map((item) => (
           <Link
             key={item.name}
             href={item.href}

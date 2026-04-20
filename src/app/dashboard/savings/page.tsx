@@ -1,51 +1,155 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { 
   CreditCard, 
   Wallet, 
   ArrowUpRight, 
   History, 
   ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Users,
+  BadgePlus,
+  Loader2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
+import { SystemSettings, User, LoanType } from '@/lib/types';
 
 export default function MemberSavings() {
   const { toast } = useToast();
-  const [showMandateForm, setShowMandateForm] = useState(false);
+  const db = useFirestore();
   const [mandateSuccess, setMandateSuccess] = useState(false);
+  const [isRequestingLoan, setIsRequestingLoan] = useState(false);
+
+  const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
+  const { data: settings } = useDoc<SystemSettings>(settingsRef);
+
+  const [loanRequest, setLoanRequest] = useState({
+    loanTypeId: '',
+    amount: 0,
+    guarantorIds: [] as string[]
+  });
+
+  const selectedLoanType = useMemo(() => 
+    settings?.loanTypes?.find(t => t.id === loanRequest.loanTypeId), 
+  [settings, loanRequest.loanTypeId]);
 
   const handleLinkCard = () => {
-    // Simulation of Paystack Tokenization flow
-    setShowMandateForm(true);
+    toast({ title: "Initializing Paystack...", description: "Securely linking your bank-grade account." });
     setTimeout(() => {
       setMandateSuccess(true);
       toast({
         title: "Mandate Created Successfully",
-        description: "Your monthly contribution of ₦10,000 will be debited on the 28th.",
+        description: "Your monthly contribution will be debited automatically.",
       });
     }, 2000);
   };
 
+  const submitLoanRequest = () => {
+    if (!db || !selectedLoanType) return;
+    setIsRequestingLoan(true);
+
+    const payload = {
+      userId: 'currentUser-123', // Hardcoded for demo
+      memberName: 'O. Abraham',
+      amount: loanRequest.amount,
+      loanTypeId: loanRequest.loanTypeId,
+      status: 'AWAITING_GUARANTORS',
+      createdAt: new Date().toISOString(),
+      guarantors: loanRequest.guarantorIds.map(id => ({
+        userId: id,
+        name: `Guarantor ${id}`,
+        status: 'PENDING',
+        notifiedAt: new Date().toISOString()
+      }))
+    };
+
+    addDoc(collection(db, 'loans'), payload)
+      .then(() => {
+        toast({ title: "Loan Requested", description: "Guarantors have been notified via the configured email server." });
+        setIsRequestingLoan(false);
+      });
+  };
+
   return (
     <div className="space-y-8 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-headline font-bold">Personal Wealth</h1>
           <p className="text-muted-foreground">Your contribution history and mandate settings.</p>
         </div>
-        <div className="flex gap-4">
-           <Button variant="outline" className="gap-2">
-            <History className="w-4 h-4" /> Download Statement
-           </Button>
+        <div className="flex gap-2 w-full sm:w-auto">
+           <Dialog>
+             <DialogTrigger asChild>
+               <Button className="flex-1 sm:flex-none gap-2 shadow-lg shadow-primary/20">
+                <BadgePlus className="w-4 h-4" /> Request Loan
+               </Button>
+             </DialogTrigger>
+             <DialogContent className="sm:max-w-md bg-slate-900 border-white/10">
+               <DialogHeader>
+                 <DialogTitle>Apply for Loan</DialogTitle>
+                 <DialogDescription>Select a product and add the required guarantors.</DialogDescription>
+               </DialogHeader>
+               <div className="space-y-4 py-4">
+                 <div className="space-y-2">
+                   <Label>Loan Type</Label>
+                   <select 
+                     className="w-full bg-white/5 border border-white/10 rounded-md p-2 text-sm"
+                     value={loanRequest.loanTypeId}
+                     onChange={(e) => setLoanRequest({...loanRequest, loanTypeId: e.target.value})}
+                   >
+                     <option value="">Select Product...</option>
+                     {settings?.loanTypes?.map(t => (
+                       <option key={t.id} value={t.id}>{t.name} ({t.interestRate}%)</option>
+                     ))}
+                   </select>
+                 </div>
+                 <div className="space-y-2">
+                   <Label>Amount (₦)</Label>
+                   <Input 
+                    type="number" 
+                    placeholder="50,000" 
+                    className="bg-white/5 border-white/10"
+                    onChange={(e) => setLoanRequest({...loanRequest, amount: Number(e.target.value)})}
+                   />
+                 </div>
+                 {selectedLoanType && (
+                   <div className="space-y-2">
+                     <Label>Guarantors Required: {selectedLoanType.guarantorsRequired}</Label>
+                     {Array.from({ length: selectedLoanType.guarantorsRequired }).map((_, i) => (
+                       <Input 
+                         key={i}
+                         placeholder={`Enter Guarantor Member ID ${i+1}`} 
+                         className="bg-white/5 border-white/10"
+                         onChange={(e) => {
+                            const newIds = [...loanRequest.guarantorIds];
+                            newIds[i] = e.target.value;
+                            setLoanRequest({...loanRequest, guarantorIds: newIds});
+                         }}
+                       />
+                     ))}
+                   </div>
+                 )}
+               </div>
+               <DialogFooter>
+                 <Button onClick={submitLoanRequest} disabled={!selectedLoanType || isRequestingLoan} className="w-full">
+                    {isRequestingLoan ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm & Notify Guarantors'}
+                 </Button>
+               </DialogFooter>
+             </DialogContent>
+           </Dialog>
            {!mandateSuccess && (
-             <Button onClick={handleLinkCard} className="gap-2 shadow-lg shadow-primary/20">
-              <CreditCard className="w-4 h-4" /> Setup Auto-Debit
+             <Button onClick={handleLinkCard} variant="outline" className="flex-1 sm:flex-none gap-2">
+              <CreditCard className="w-4 h-4" /> Link Card
              </Button>
            )}
         </div>
@@ -96,28 +200,16 @@ export default function MemberSavings() {
                   <p className="font-bold">Active Mandate</p>
                   <p className="text-xs text-muted-foreground">Visa Ending in 4242</p>
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 bg-accent/10 border border-accent/20 rounded-full">
-                  <CheckCircle2 className="w-3 h-3 text-accent" />
-                  <span className="text-[10px] font-bold text-accent uppercase tracking-widest">Verified</span>
-                </div>
               </>
             ) : (
               <>
                 <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                   <CreditCard className="w-10 h-10 text-primary" />
                 </div>
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">No mandate linked. Recurring contributions are currently manual.</p>
-                </div>
                 <Button onClick={handleLinkCard} variant="secondary" className="w-full">Link Card Now</Button>
               </>
             )}
           </CardContent>
-          <CardFooter className="border-t border-white/5 pt-4">
-             <p className="text-[10px] text-muted-foreground text-center w-full italic">
-               *Payments are secured using AES-256 bank-grade encryption.
-             </p>
-          </CardFooter>
         </Card>
       </div>
 
@@ -130,8 +222,6 @@ export default function MemberSavings() {
             {[
               { type: 'Monthly Contribution', amount: '₦10,000', date: 'Jan 28, 2025', status: 'SUCCESS' },
               { type: 'Monthly Contribution', amount: '₦10,000', date: 'Dec 28, 2024', status: 'SUCCESS' },
-              { type: 'Special Levies', amount: '₦5,000', date: 'Nov 15, 2024', status: 'SUCCESS' },
-              { type: 'Monthly Contribution', amount: '₦10,000', date: 'Oct 28, 2024', status: 'SUCCESS' },
             ].map((tx, i) => (
               <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5">
                 <div className="flex items-center gap-4">
@@ -145,7 +235,6 @@ export default function MemberSavings() {
                 </div>
                 <div className="text-right">
                   <p className="font-bold text-accent">{tx.amount}</p>
-                  <p className="text-[10px] font-bold tracking-tighter text-muted-foreground">CONFIRMED</p>
                 </div>
               </div>
             ))}

@@ -16,6 +16,7 @@ export interface LoanType {
   interestType: InterestType;
   maxDurationMonths: number;
   minSavingsMonths: number;
+  guarantorsRequired: number;
 }
 
 export interface User {
@@ -30,6 +31,20 @@ export interface User {
   paystackAuthCode?: string;
 }
 
+export interface SmtpSettings {
+  host: string;
+  port: number;
+  user: string;
+  pass: string;
+  fromName: string;
+  fromEmail: string;
+}
+
+export interface BrandingSettings {
+  systemName: string;
+  logoUrl: string;
+}
+
 export interface SystemSettings {
   minMonthlyContribution: number;
   defaultPenaltyRate: number;
@@ -42,6 +57,16 @@ export interface SystemSettings {
   isAutoDebitActive: boolean;
   loanTypes: LoanType[];
   totalPoolLiquidity: number;
+  branding?: BrandingSettings;
+  smtp?: SmtpSettings;
+}
+
+export interface Guarantor {
+  userId: string;
+  name: string;
+  status: 'PENDING' | 'CONFIRMED' | 'REJECTED';
+  notifiedAt?: string;
+  confirmedAt?: string;
 }
 
 export interface Loan {
@@ -50,8 +75,9 @@ export interface Loan {
   memberName: string;
   amount: number;
   loanTypeId: string;
-  status: 'AWAITING_APPROVAL' | 'SECRETARY_VERIFIED' | 'TREASURER_APPROVED' | 'DISBURSED' | 'REJECTED' | 'PAID';
+  status: 'AWAITING_GUARANTORS' | 'AWAITING_APPROVAL' | 'SECRETARY_VERIFIED' | 'TREASURER_APPROVED' | 'DISBURSED' | 'REJECTED' | 'PAID';
   createdAt: string;
+  guarantors: Guarantor[];
   repaymentSchedule: {
     dueDate: string;
     amount: number;

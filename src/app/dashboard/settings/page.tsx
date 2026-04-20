@@ -23,10 +23,13 @@ import {
   Plus,
   Trash2,
   Percent,
-  Calculator
+  Calculator,
+  Mail,
+  Palette,
+  ShieldCheck
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { SystemSettings, LoanType } from '@/lib/types';
+import { SystemSettings, LoanType, SmtpSettings, BrandingSettings } from '@/lib/types';
 
 export default function CommandCenter() {
   const { toast } = useToast();
@@ -41,18 +44,23 @@ export default function CommandCenter() {
   const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
   const { data: settingsData, loading: settingsLoading } = useDoc<SystemSettings>(settingsRef);
 
-  const [form, setForm] = useState<Partial<SystemSettings>>({});
+  const [form, setForm] = useState<Partial<SystemSettings>>({
+    branding: { systemName: 'CoopNest', logoUrl: '' },
+    smtp: { host: '', port: 587, user: '', pass: '', fromName: '', fromEmail: '' }
+  });
+
   const [newLoanType, setNewLoanType] = useState<Partial<LoanType>>({
     name: '',
     interestRate: 5,
     interestType: 'FLAT',
     maxDurationMonths: 12,
-    minSavingsMonths: 6
+    minSavingsMonths: 6,
+    guarantorsRequired: 2
   });
 
   useEffect(() => {
     if (settingsData) {
-      setForm(settingsData);
+      setForm(prev => ({ ...prev, ...settingsData }));
     }
   }, [settingsData]);
 
@@ -84,8 +92,8 @@ export default function CommandCenter() {
       loanTypes: arrayUnion(typeToAdd)
     }).then(() => {
       toast({ title: "Loan Type Created", description: `${typeToAdd.name} is now available for applications.` });
-      setNewLoanType({ name: '', interestRate: 5, interestType: 'FLAT', maxDurationMonths: 12, minSavingsMonths: 6 });
-      logAudit('New Loan Type Added', typeToAdd.name);
+      setNewLoanType({ name: '', interestRate: 5, interestType: 'FLAT', maxDurationMonths: 12, minSavingsMonths: 6, guarantorsRequired: 2 });
+      logAudit('New Loan Type Added', typeToAdd.name as string);
     });
   };
 
@@ -126,11 +134,89 @@ export default function CommandCenter() {
       </div>
 
       <Tabs defaultValue="financials" className="space-y-6">
-        <TabsList className="bg-card/50 border border-white/5 p-1">
-          <TabsTrigger value="financials" className="gap-2"><Calculator className="w-4 h-4" /> Financial Rules</TabsTrigger>
+        <TabsList className="bg-card/50 border border-white/5 p-1 flex-wrap h-auto">
+          <TabsTrigger value="branding" className="gap-2"><Palette className="w-4 h-4" /> Branding</TabsTrigger>
+          <TabsTrigger value="financials" className="gap-2"><Calculator className="w-4 h-4" /> Financials</TabsTrigger>
           <TabsTrigger value="loans" className="gap-2"><Percent className="w-4 h-4" /> Loan Engine</TabsTrigger>
+          <TabsTrigger value="notifications" className="gap-2"><Mail className="w-4 h-4" /> Email Server</TabsTrigger>
           <TabsTrigger value="rails" className="gap-2"><Key className="w-4 h-4" /> Payment Rails</TabsTrigger>
         </TabsList>
+
+        <TabsContent value="branding" className="space-y-6">
+          <Card className="bg-card/50 border-white/5">
+            <CardHeader>
+              <CardTitle>Society Identity</CardTitle>
+              <CardDescription>Customize the name and logo of your cooperative.</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label>System Name</Label>
+                <Input 
+                  value={form.branding?.systemName || ''} 
+                  onChange={(e) => setForm({...form, branding: { ...form.branding!, systemName: e.target.value }})} 
+                  placeholder="e.g. CoopNest Professional" 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Logo URL</Label>
+                <Input 
+                  value={form.branding?.logoUrl || ''} 
+                  onChange={(e) => setForm({...form, branding: { ...form.branding!, logoUrl: e.target.value }})} 
+                  placeholder="https://..." 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="notifications" className="space-y-6">
+          <Card className="bg-card/50 border-white/5">
+            <CardHeader>
+              <CardTitle>SMTP Configuration</CardTitle>
+              <CardDescription>Configure outgoing mail server for guarantor notifications.</CardDescription>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>SMTP Host</Label>
+                <Input 
+                  value={form.smtp?.host || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, host: e.target.value }})} 
+                  placeholder="smtp.mailgun.org" 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>SMTP Port</Label>
+                <Input 
+                  type="number" 
+                  value={form.smtp?.port || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, port: Number(e.target.value) }})} 
+                  placeholder="587" 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>SMTP User</Label>
+                <Input 
+                  value={form.smtp?.user || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, user: e.target.value }})} 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>SMTP Password</Label>
+                <Input 
+                  type="password" 
+                  value={form.smtp?.pass || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, pass: e.target.value }})} 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
         <TabsContent value="financials" className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -199,14 +285,8 @@ export default function CommandCenter() {
                     <Input type="number" value={newLoanType.interestRate} onChange={e => setNewLoanType({...newLoanType, interestRate: Number(e.target.value)})} className="bg-white/5 border-white/10" />
                   </div>
                   <div className="space-y-2">
-                    <Label>Type</Label>
-                    <Select value={newLoanType.interestType} onValueChange={v => setNewLoanType({...newLoanType, interestType: v as any})}>
-                      <SelectTrigger className="bg-white/5 border-white/10"><SelectValue /></SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="FLAT">Flat</SelectItem>
-                        <SelectItem value="REDUCING">Reducing</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label>Guarantors Req.</Label>
+                    <Input type="number" value={newLoanType.guarantorsRequired} onChange={e => setNewLoanType({...newLoanType, guarantorsRequired: Number(e.target.value)})} className="bg-white/5 border-white/10" />
                   </div>
                 </div>
                 <Button onClick={addLoanType} className="w-full gap-2"><Plus className="w-4 h-4" /> Define Product</Button>
@@ -221,7 +301,7 @@ export default function CommandCenter() {
                     <div key={i} className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/5">
                       <div>
                         <p className="font-bold">{type.name}</p>
-                        <p className="text-xs text-muted-foreground">{type.interestRate}% {type.interestType} Interest • Max {type.maxDurationMonths} Months</p>
+                        <p className="text-xs text-muted-foreground">{type.interestRate}% {type.interestType} Interest • {type.guarantorsRequired} Guarantors Needed</p>
                       </div>
                       <Button variant="ghost" size="icon" className="text-destructive"><Trash2 className="w-4 h-4" /></Button>
                     </div>
@@ -244,10 +324,6 @@ export default function CommandCenter() {
               <div className="space-y-2">
                 <Label>Secret Key</Label>
                 <Input type="password" value={form.paystackSecretKey || ''} onChange={(e) => setForm({...form, paystackSecretKey: e.target.value})} placeholder="sk_live_..." className="bg-white/5 border-white/10" />
-              </div>
-              <div className="p-4 bg-orange-400/5 border border-orange-400/20 rounded-xl flex gap-3">
-                 <Zap className="w-5 h-5 text-orange-400 shrink-0" />
-                 <p className="text-xs text-orange-400 leading-relaxed">Ensure these keys correspond to your Live environment for actual transactions. Tokenization will be handled via the Paystack inline popup.</p>
               </div>
             </CardContent>
           </Card>
