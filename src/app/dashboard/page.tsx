@@ -2,21 +2,19 @@
 "use client"
 
 import { useEffect, useState } from 'react';
-import { UserRole, SystemSettings } from '@/lib/types';
+import { UserRole, SystemSettings, Loan } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
   TrendingUp, 
   CreditCard, 
   ArrowUpRight, 
-  AlertCircle,
   Users,
   ShieldCheck,
-  FileText,
   Activity,
   Wallet,
-  Gavel,
   CheckCircle2,
-  Clock
+  Mail,
+  Loader2
 } from 'lucide-react';
 import { 
   BarChart, 
@@ -28,11 +26,13 @@ import {
   ResponsiveContainer, 
 } from 'recharts';
 import { cn } from '@/lib/utils';
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
-import { doc } from 'firebase/firestore';
+import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { doc, query, collection, where, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
+import { sendGuarantorRequest } from '@/ai/flows/guarantor-notification-flow';
 
 const chartData = [
   { name: 'Jan', total: 4000 },
@@ -60,13 +60,52 @@ const itemVariants = {
 export default function DashboardOverview() {
   const [role, setRole] = useState<UserRole | null>(null);
   const db = useFirestore();
+  const { toast } = useToast();
+  const [processingId, setProcessingId] = useState<string | null>(null);
   
   const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
   const { data: settings } = useDoc<SystemSettings>(settingsRef);
 
+  const pendingNotifQuery = useMemoFirebase(() => {
+    if (!db) return null;
+    return query(collection(db, 'loans'), where('status', '==', 'AWAITING_NOTIFICATION_APPROVAL'));
+  }, [db]);
+  const { data: pendingNotifications } = useCollection<Loan>(pendingNotifQuery);
+
   useEffect(() => {
     setRole(localStorage.getItem('coopnest_role') as UserRole || 'MEMBER');
   }, []);
+
+  const handleApproveNotification = async (loan: Loan) => {
+    if (!db || !settings) return;
+    setProcessingId(loan.id);
+
+    try {
+      // Simulate sending emails to each guarantor via AI flow
+      for (const g of loan.guarantors) {
+        await sendGuarantorRequest({
+          memberName: loan.memberName,
+          guarantorName: g.name,
+          guarantorEmail: `${g.userId.toLowerCase()}@society.com`,
+          loanAmount: loan.amount,
+          systemName: settings.branding?.systemName || 'CoopNest'
+        });
+      }
+
+      // Update Firestore status
+      const loanRef = doc(db, 'loans', loan.id);
+      await updateDoc(loanRef, {
+        status: 'AWAITING_GUARANTORS',
+        notificationsSentAt: new Date().toISOString()
+      });
+
+      toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan.` });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Notification Error", description: e.message });
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   if (!role) return null;
 
@@ -81,6 +120,7 @@ export default function DashboardOverview() {
               <StatCard title="Loan Exposure" value="₦12.4M" icon={TrendingUp} variant="destructive" delay={0.3} />
               <StatCard title="Auto-Debit Status" value={settings?.isAutoDebitActive ? "ACTIVE" : "PAUSED"} icon={Activity} delay={0.4} />
             </div>
+            
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               <Card className="lg:col-span-2 glass-card overflow-hidden">
                 <CardHeader><CardTitle>Financial Inflow Trends</CardTitle></CardHeader>
@@ -88,22 +128,61 @@ export default function DashboardOverview() {
                   <ChartWidget data={chartData} />
                 </CardContent>
               </Card>
-              <Card className="glass-card">
-                <CardHeader>
-                  <CardTitle>Governance Queue</CardTitle>
-                  <CardDescription>Awaiting presidential seal.</CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
-                    <p className="text-sm font-bold">₦4.5M Project Loan</p>
-                    <p className="text-xs text-muted-foreground mb-3">Verified by Sec-Gen & Treasurer</p>
-                    <Button size="sm" className="w-full shadow-lg shadow-primary/20">Review & Approve</Button>
-                  </div>
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/5">
-                    <p className="text-sm font-bold text-muted-foreground">No other pending items</p>
-                  </div>
-                </CardContent>
-              </Card>
+
+              <div className="space-y-6">
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Mail className="w-5 h-5 text-primary" />
+                      Pending Notifications
+                    </CardTitle>
+                    <CardDescription>Approve guarantor contact requests.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {pendingNotifications?.map((loan) => (
+                      <div key={loan.id} className="p-4 rounded-xl bg-primary/5 border border-primary/10 space-y-3">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <p className="text-sm font-bold">{loan.memberName}</p>
+                            <p className="text-xs text-muted-foreground">₦{loan.amount.toLocaleString()}</p>
+                          </div>
+                          <p className="text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase font-bold text-muted-foreground">
+                            {loan.guarantors.length} Guarantors
+                          </p>
+                        </div>
+                        <Button 
+                          size="sm" 
+                          className="w-full" 
+                          disabled={processingId === loan.id}
+                          onClick={() => handleApproveNotification(loan)}
+                        >
+                          {processingId === loan.id ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Mail className="w-4 h-4 mr-2" />}
+                          Approve & Notify
+                        </Button>
+                      </div>
+                    ))}
+                    {(!pendingNotifications || pendingNotifications.length === 0) && (
+                      <div className="text-center py-6 text-xs text-muted-foreground">
+                        No pending notifications.
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                <Card className="glass-card">
+                  <CardHeader>
+                    <CardTitle>Governance Queue</CardTitle>
+                    <CardDescription>Final approvals for verified loans.</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="p-4 rounded-xl bg-orange-500/10 border border-orange-500/20">
+                      <p className="text-sm font-bold">₦4.5M Project Loan</p>
+                      <p className="text-xs text-muted-foreground mb-3">Verified by Sec-Gen & Treasurer</p>
+                      <Button size="sm" className="w-full shadow-lg shadow-primary/20">Review & Approve</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
           </motion.div>
         );
@@ -149,7 +228,7 @@ export default function DashboardOverview() {
                 {[1,2,3,4].map(i => (
                   <div key={i} className="text-xs font-mono p-3 bg-white/5 rounded-lg border border-white/5 flex items-center justify-between">
                     <span className="text-muted-foreground">[2025-03-01 09:15:42] CONFIG_CHANGE: LOAN_MULTIPLIER (3x -> 3.5x)</span>
-                    <Badge variant="outline" className="text-[9px] uppercase">Verified</Badge>
+                    <span className="text-[9px] uppercase border px-1 rounded opacity-50">Verified</span>
                   </div>
                 ))}
               </CardContent>

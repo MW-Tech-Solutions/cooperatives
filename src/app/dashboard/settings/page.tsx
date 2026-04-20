@@ -11,31 +11,32 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  Settings, 
   Save, 
   RefreshCcw,
-  Zap,
   Lock,
-  Key,
   Plus,
   Trash2,
   Percent,
   Calculator,
   Mail,
   Palette,
-  ShieldCheck
+  ShieldCheck,
+  Upload,
+  Image as ImageIcon,
+  Key
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { SystemSettings, LoanType, SmtpSettings, BrandingSettings } from '@/lib/types';
+import { SystemSettings, LoanType } from '@/lib/types';
+import { uploadLogo } from '@/app/actions/upload';
 
 export default function CommandCenter() {
   const { toast } = useToast();
   const db = useFirestore();
   const [role, setRole] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
 
   useEffect(() => {
     setRole(localStorage.getItem('coopnest_role'));
@@ -63,6 +64,32 @@ export default function CommandCenter() {
       setForm(prev => ({ ...prev, ...settingsData }));
     }
   }, [settingsData]);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingLogo(true);
+    const formData = new FormData();
+    formData.append('logo', file);
+
+    try {
+      const res = await uploadLogo(formData);
+      if (res.success) {
+        setForm(prev => ({
+          ...prev,
+          branding: { ...prev.branding!, logoUrl: res.url! }
+        }));
+        toast({ title: "Logo Uploaded", description: "The new logo has been saved to the server." });
+      } else {
+        toast({ variant: "destructive", title: "Upload Failed", description: res.error });
+      }
+    } catch (err: any) {
+      toast({ variant: "destructive", title: "Error", description: err.message });
+    } finally {
+      setUploadingLogo(false);
+    }
+  };
 
   const handleSave = () => {
     if (!db || !settingsRef) return;
@@ -148,7 +175,7 @@ export default function CommandCenter() {
               <CardTitle>Society Identity</CardTitle>
               <CardDescription>Customize the name and logo of your cooperative.</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               <div className="space-y-2">
                 <Label>System Name</Label>
                 <Input 
@@ -158,14 +185,42 @@ export default function CommandCenter() {
                   className="bg-white/5 border-white/10" 
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Logo URL</Label>
-                <Input 
-                  value={form.branding?.logoUrl || ''} 
-                  onChange={(e) => setForm({...form, branding: { ...form.branding!, logoUrl: e.target.value }})} 
-                  placeholder="https://..." 
-                  className="bg-white/5 border-white/10" 
-                />
+              
+              <div className="space-y-4">
+                <Label>System Logo</Label>
+                <div className="flex items-start gap-6">
+                  <div className="w-32 h-32 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden relative group">
+                    {form.branding?.logoUrl ? (
+                      <img src={form.branding.logoUrl} alt="Preview" className="w-full h-full object-contain" />
+                    ) : (
+                      <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                    )}
+                    {uploadingLogo && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <RefreshCcw className="w-6 h-6 animate-spin text-white" />
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-4">
+                    <p className="text-sm text-muted-foreground">Upload a PNG or JPG logo. This will be stored locally in the project directory.</p>
+                    <div className="relative">
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        id="logo-upload" 
+                        onChange={handleLogoUpload}
+                        disabled={uploadingLogo}
+                      />
+                      <Button asChild variant="outline" disabled={uploadingLogo}>
+                        <label htmlFor="logo-upload" className="cursor-pointer gap-2">
+                          <Upload className="w-4 h-4" />
+                          {uploadingLogo ? 'Processing...' : 'Choose File'}
+                        </label>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -211,6 +266,22 @@ export default function CommandCenter() {
                   type="password" 
                   value={form.smtp?.pass || ''} 
                   onChange={(e) => setForm({...form, smtp: { ...form.smtp!, pass: e.target.value }})} 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>From Name</Label>
+                <Input 
+                  value={form.smtp?.fromName || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, fromName: e.target.value }})} 
+                  className="bg-white/5 border-white/10" 
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>From Email</Label>
+                <Input 
+                  value={form.smtp?.fromEmail || ''} 
+                  onChange={(e) => setForm({...form, smtp: { ...form.smtp!, fromEmail: e.target.value }})} 
                   className="bg-white/5 border-white/10" 
                 />
               </div>

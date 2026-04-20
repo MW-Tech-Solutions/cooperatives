@@ -2,7 +2,7 @@
 "use client"
 
 import { useState, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Input } from '@/components/ui/input';
@@ -11,18 +11,15 @@ import {
   CreditCard, 
   Wallet, 
   ArrowUpRight, 
-  History, 
   ShieldCheck,
-  CheckCircle2,
-  Users,
   BadgePlus,
   Loader2
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
-import { doc, addDoc, collection, serverTimestamp } from 'firebase/firestore';
-import { SystemSettings, User, LoanType } from '@/lib/types';
+import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { doc, addDoc, collection } from 'firebase/firestore';
+import { SystemSettings } from '@/lib/types';
 
 export default function MemberSavings() {
   const { toast } = useToast();
@@ -63,19 +60,19 @@ export default function MemberSavings() {
       memberName: 'O. Abraham',
       amount: loanRequest.amount,
       loanTypeId: loanRequest.loanTypeId,
-      status: 'AWAITING_GUARANTORS',
+      status: 'AWAITING_NOTIFICATION_APPROVAL',
       createdAt: new Date().toISOString(),
       guarantors: loanRequest.guarantorIds.map(id => ({
         userId: id,
         name: `Guarantor ${id}`,
         status: 'PENDING',
-        notifiedAt: new Date().toISOString()
+        notifiedAt: null
       }))
     };
 
     addDoc(collection(db, 'loans'), payload)
       .then(() => {
-        toast({ title: "Loan Requested", description: "Guarantors have been notified via the configured email server." });
+        toast({ title: "Request Submitted", description: "The President must approve sending notifications to your nominated guarantors." });
         setIsRequestingLoan(false);
       });
   };
@@ -129,7 +126,7 @@ export default function MemberSavings() {
                        <Input 
                          key={i}
                          placeholder={`Enter Guarantor Member ID ${i+1}`} 
-                         className="bg-white/5 border-white/10"
+                         className="bg-white/5 border-white/10 mb-2"
                          onChange={(e) => {
                             const newIds = [...loanRequest.guarantorIds];
                             newIds[i] = e.target.value;
@@ -142,7 +139,7 @@ export default function MemberSavings() {
                </div>
                <DialogFooter>
                  <Button onClick={submitLoanRequest} disabled={!selectedLoanType || isRequestingLoan} className="w-full">
-                    {isRequestingLoan ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Confirm & Notify Guarantors'}
+                    {isRequestingLoan ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Submit for Admin Review'}
                  </Button>
                </DialogFooter>
              </DialogContent>

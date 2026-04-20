@@ -75,7 +75,7 @@ export interface Loan {
   memberName: string;
   amount: number;
   loanTypeId: string;
-  status: 'AWAITING_GUARANTORS' | 'AWAITING_APPROVAL' | 'SECRETARY_VERIFIED' | 'TREASURER_APPROVED' | 'DISBURSED' | 'REJECTED' | 'PAID';
+  status: 'AWAITING_NOTIFICATION_APPROVAL' | 'AWAITING_GUARANTORS' | 'AWAITING_APPROVAL' | 'SECRETARY_VERIFIED' | 'TREASURER_APPROVED' | 'DISBURSED' | 'REJECTED' | 'PAID';
   createdAt: string;
   guarantors: Guarantor[];
   repaymentSchedule: {
