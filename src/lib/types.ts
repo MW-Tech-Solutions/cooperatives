@@ -12,30 +12,48 @@ export interface User {
   name: string;
   email: string;
   role: UserRole;
-  savings: number;
-  activeLoan?: number;
+  memberId: string;
+  totalSavings: number;
   joinDate: string;
-}
-
-export interface LoanProduct {
-  id: string;
-  name: string;
-  interestRate: number;
-  interestType: 'FLAT' | 'REDUCING';
-  maxDuration: number; // in months
+  status: 'Active' | 'Pending' | 'Inactive';
 }
 
 export interface SystemSettings {
-  contributionAmount: number;
-  loanMultiplier: number;
-  autoDebitDate: number; // day of month
+  minMonthlyContribution: number;
+  defaultPenaltyRate: number;
+  loanToSavingsMultiplier: number;
+  emergencyLoanInterest: number;
+  loanEligibilityMonths: number;
+  autoDebitDate: number;
+  paystackPublicKey: string;
+  paystackSecretKey: string;
   isAutoDebitActive: boolean;
 }
 
-export interface ContributionLog {
+export interface Loan {
+  id: string;
+  userId: string;
+  memberName: string;
+  amount: number;
+  type: string;
+  status: 'AWAITING_APPROVAL' | 'DISBURSED' | 'REJECTED' | 'PAID';
+  createdAt: string;
+}
+
+export interface Contribution {
   id: string;
   userId: string;
   amount: number;
+  type: string;
   date: string;
   status: 'SUCCESS' | 'FAILED' | 'PENDING';
+}
+
+export interface AuditLog {
+  id: string;
+  action: string;
+  actor: string;
+  target: string;
+  timestamp: string;
+  status: 'VERIFIED' | 'FLAGGED';
 }
