@@ -1,19 +1,12 @@
-
 "use client"
 
 import { useEffect, useState } from 'react';
 import { UserRole, SystemSettings, Loan } from '@/lib/types';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { 
-  TrendingUp, 
   CreditCard, 
-  ArrowUpRight, 
-  Users,
   ShieldCheck,
-  Activity,
-  Wallet,
   CheckCircle2,
-  Mail,
   Loader2,
   ChevronDown,
   FileText
@@ -22,7 +15,6 @@ import { cn } from '@/lib/utils';
 import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
 import { doc, query, collection, where, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { sendGuarantorRequest } from '@/ai/flows/guarantor-notification-flow';
@@ -65,14 +57,16 @@ export default function DashboardOverview() {
     setProcessingId(loan.id);
 
     try {
-      for (const g of loan.guarantors) {
-        await sendGuarantorRequest({
-          memberName: loan.memberName,
-          guarantorName: g.name,
-          guarantorEmail: `${g.userId.toLowerCase()}@society.com`,
-          loanAmount: loan.amount,
-          systemName: settings.branding?.systemName || 'CoopNest'
-        });
+      if (loan.guarantors) {
+        for (const g of loan.guarantors) {
+          await sendGuarantorRequest({
+            memberName: loan.memberName,
+            guarantorName: g.name,
+            guarantorEmail: `${g.userId.toLowerCase()}@society.com`,
+            loanAmount: loan.amount,
+            systemName: settings.branding?.systemName || 'CoopNest'
+          });
+        }
       }
 
       const loanRef = doc(db, 'loans', loan.id);
@@ -92,18 +86,21 @@ export default function DashboardOverview() {
   if (!role) return null;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <div className="space-y-6 max-w-5xl mx-auto pb-10">
       {/* Hero Greeting */}
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-emerald-600 to-emerald-800 p-8 text-white shadow-lg"
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-800 p-8 text-white shadow-xl"
       >
-        <div className="relative z-10">
-          <h1 className="text-2xl font-bold font-headline">Hello Abraham, Welcome to your {settings?.branding?.systemName || 'CoopNest'} Dashboard</h1>
+        <div className="relative z-10 space-y-2">
+          <p className="text-emerald-100 font-medium tracking-wide uppercase text-xs">Overview</p>
+          <h1 className="text-3xl md:text-4xl font-bold font-headline leading-tight">
+            Hello Abraham, Welcome to your {settings?.branding?.systemName || 'CoopNest'} Dashboard
+          </h1>
         </div>
-        <div className="absolute right-0 bottom-0 opacity-20 pointer-events-none translate-x-10 translate-y-10">
-           <ShieldCheck className="w-64 h-64" />
+        <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-10 translate-y-10">
+           <ShieldCheck className="w-80 h-80" />
         </div>
       </motion.div>
 
@@ -115,13 +112,13 @@ export default function DashboardOverview() {
         className="flex items-center justify-between p-6 bg-white border border-emerald-100 rounded-2xl shadow-sm"
       >
         <div>
-          <h2 className="font-bold text-lg">Complete Your Society Onboarding</h2>
+          <h2 className="font-bold text-lg text-slate-800">Complete Your Society Onboarding</h2>
           <div className="flex items-center gap-2 mt-1">
             <span className="text-emerald-600 font-bold">100% completed.</span>
-            <span className="text-muted-foreground text-sm">Complete steps to unlock full experience</span>
+            <span className="text-slate-400 text-sm font-medium">Complete steps to unlock full experience</span>
           </div>
         </div>
-        <Button variant="outline" className="rounded-full gap-2 border-emerald-200 text-emerald-700 hover:bg-emerald-50">
+        <Button variant="outline" className="rounded-full gap-2 border-emerald-100 text-emerald-700 hover:bg-emerald-50 bg-white">
           <ChevronDown className="w-4 h-4" /> Show
         </Button>
       </motion.div>
@@ -159,22 +156,28 @@ export default function DashboardOverview() {
 
       {/* Recent Activity / Approval Queue */}
       {role === 'PRESIDENT' && pendingNotifications && pendingNotifications.length > 0 && (
-        <Card className="rounded-2xl border-emerald-100">
-          <CardHeader>
-            <CardTitle className="text-lg">Notification Approvals</CardTitle>
+        <Card className="rounded-2xl border-emerald-50 bg-white shadow-sm overflow-hidden">
+          <CardHeader className="bg-emerald-50/50">
+            <CardTitle className="text-lg font-bold text-emerald-950">Notification Approvals</CardTitle>
+            <CardDescription>Review and dispatch notifications to nominated guarantors.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-4 pt-6">
             {pendingNotifications.map((loan) => (
-              <div key={loan.id} className="flex items-center justify-between p-4 bg-emerald-50 rounded-xl border border-emerald-100">
-                <div>
-                  <p className="font-bold">{loan.memberName}</p>
-                  <p className="text-sm text-muted-foreground">₦{loan.amount.toLocaleString()} Loan Request</p>
+              <div key={loan.id} className="flex items-center justify-between p-5 bg-white rounded-2xl border border-emerald-50 shadow-sm hover:border-emerald-200 transition-colors">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
+                    <FileText className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="font-bold text-slate-800">{loan.memberName}</p>
+                    <p className="text-sm text-slate-500">₦{loan.amount.toLocaleString()} Loan Request</p>
+                  </div>
                 </div>
                 <Button 
                   size="sm"
                   disabled={processingId === loan.id}
                   onClick={() => handleApproveNotification(loan)}
-                  className="rounded-full bg-emerald-600 hover:bg-emerald-700"
+                  className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-10 px-6"
                 >
                   {processingId === loan.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Approve & Notify'}
                 </Button>
@@ -203,13 +206,13 @@ function StatCard({
   check?: boolean
 }) {
   return (
-    <motion.div variants={itemVariants} className={cn("relative p-6 rounded-2xl shadow-lg flex items-center justify-between overflow-hidden", className)}>
+    <motion.div variants={itemVariants} className={cn("relative p-7 rounded-3xl shadow-xl flex items-center justify-between overflow-hidden", className)}>
       <div className="space-y-1 relative z-10">
-        <h3 className="text-sm font-medium opacity-90">{title}</h3>
-        <p className="text-2xl font-bold">{value}</p>
-        {subtitle && <p className="text-xs opacity-80">{subtitle}</p>}
+        <h3 className="text-xs font-bold opacity-80 uppercase tracking-widest">{title}</h3>
+        <p className="text-2xl font-black font-headline tracking-tight">{value}</p>
+        {subtitle && <p className="text-xs opacity-80 font-medium">{subtitle}</p>}
       </div>
-      <div className="bg-white/20 p-3 rounded-xl relative z-10">
+      <div className="bg-white/20 p-3.5 rounded-2xl relative z-10 backdrop-blur-sm">
         <Icon className="w-6 h-6" />
       </div>
       {check && (
