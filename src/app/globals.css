@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    --background: 150 25% 98%;
+    --background: 145 50% 99%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -12,18 +12,18 @@
     --popover-foreground: 222 47% 11%;
     --primary: 156 72% 35%;
     --primary-foreground: 210 40% 98%;
-    --secondary: 156 30% 95%;
+    --secondary: 156 30% 96%;
     --secondary-foreground: 156 72% 20%;
-    --muted: 156 20% 92%;
+    --muted: 156 20% 94%;
     --muted-foreground: 156 20% 40%;
     --accent: 156 72% 41%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 156 20% 90%;
-    --input: 156 20% 90%;
+    --border: 156 20% 92%;
+    --input: 156 20% 92%;
     --ring: 156 72% 35%;
-    --radius: 1rem;
+    --radius: 1.25rem;
   }
 }
 
@@ -33,8 +33,8 @@
   }
   body {
     @apply bg-background text-foreground font-body antialiased;
-    background-image: radial-gradient(at 100% 0%, hsla(156, 72%, 41%, 0.05) 0px, transparent 50%),
-                      radial-gradient(at 0% 100%, hsla(156, 72%, 41%, 0.05) 0px, transparent 50%);
+    background-image: radial-gradient(circle at center, hsla(156, 72%, 35%, 0.03) 0%, transparent 70%),
+                      repeating-radial-gradient(circle at center, hsla(156, 72%, 35%, 0.02) 0px, hsla(156, 72%, 35%, 0.02) 1px, transparent 1px, transparent 40px);
   }
   h1, h2, h3, h4, h5, h6 {
     @apply font-headline tracking-tight;
@@ -43,9 +43,9 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 backdrop-blur-md border border-white/20 shadow-sm;
+    @apply bg-white/80 backdrop-blur-md border border-emerald-100 shadow-sm;
   }
   .glass-sidebar {
-    @apply bg-white/90 backdrop-blur-xl border-r border-border;
+    @apply bg-white/95 backdrop-blur-xl border-r border-emerald-100;
   }
 }

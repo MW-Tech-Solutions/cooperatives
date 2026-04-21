@@ -9,7 +9,9 @@ import {
   CheckCircle2,
   Loader2,
   ChevronDown,
-  FileText
+  FileText,
+  Bookmark,
+  Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
@@ -20,17 +22,16 @@ import { useToast } from '@/hooks/use-toast';
 import { sendGuarantorRequest } from '@/ai/flows/guarantor-notification-flow';
 
 const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: { opacity: 0 },
   visible: { 
     opacity: 1, 
-    y: 0,
     transition: { staggerChildren: 0.1 }
   }
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, scale: 0.95 },
-  visible: { opacity: 1, scale: 1 }
+  hidden: { opacity: 0, y: 15 },
+  visible: { opacity: 1, y: 0 }
 };
 
 export default function DashboardOverview() {
@@ -86,100 +87,107 @@ export default function DashboardOverview() {
   if (!role) return null;
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto pb-10">
-      {/* Hero Greeting */}
+    <div className="space-y-8 max-w-6xl mx-auto pb-10">
+      {/* Hero Section */}
       <motion.div 
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600 to-emerald-800 p-8 text-white shadow-xl"
+        initial={{ opacity: 0, scale: 0.98 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative overflow-hidden rounded-[2.5rem] bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-900 p-10 md:p-14 text-white shadow-2xl shadow-emerald-200/50"
       >
-        <div className="relative z-10 space-y-2">
-          <p className="text-emerald-100 font-medium tracking-wide uppercase text-xs">Overview</p>
-          <h1 className="text-3xl md:text-4xl font-bold font-headline leading-tight">
-            Hello Abraham, Welcome to your {settings?.branding?.systemName || 'CoopNest'} Dashboard
+        <div className="relative z-10 max-w-2xl space-y-6">
+          <h1 className="text-4xl md:text-5xl font-black font-headline leading-[1.15]">
+            Hello Muhammad, Welcome to your 3MTT Dashboard
           </h1>
         </div>
-        <div className="absolute right-0 bottom-0 opacity-10 pointer-events-none translate-x-10 translate-y-10">
-           <ShieldCheck className="w-80 h-80" />
+        
+        {/* Decorative Assets */}
+        <div className="absolute right-12 bottom-0 w-1/3 h-full hidden lg:block opacity-90">
+          <img 
+            src="https://picsum.photos/seed/hero/600/400" 
+            alt="Hero" 
+            className="w-full h-full object-cover rounded-t-3xl border-x-8 border-t-8 border-white/10"
+            data-ai-hint="happy people" 
+          />
         </div>
+        <Bookmark className="absolute top-10 left-1/2 opacity-10 w-24 h-24" />
+        <Calendar className="absolute bottom-10 right-10 opacity-10 w-24 h-24" />
       </motion.div>
 
-      {/* Onboarding Status */}
+      {/* Onboarding Banner */}
       <motion.div 
         variants={itemVariants}
         initial="hidden"
         animate="visible"
-        className="flex items-center justify-between p-6 bg-white border border-emerald-100 rounded-2xl shadow-sm"
+        className="flex flex-col sm:flex-row items-center justify-between p-6 bg-emerald-50/30 border-2 border-emerald-100 rounded-3xl"
       >
-        <div>
-          <h2 className="font-bold text-lg text-slate-800">Complete Your Society Onboarding</h2>
-          <div className="flex items-center gap-2 mt-1">
-            <span className="text-emerald-600 font-bold">100% completed.</span>
-            <span className="text-slate-400 text-sm font-medium">Complete steps to unlock full experience</span>
-          </div>
+        <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
+          <h2 className="font-extrabold text-lg text-slate-800">Complete Your 3MTT Onboarding</h2>
+          <span className="text-emerald-600 font-black text-sm">100% completed.</span>
+          <span className="text-slate-500 text-sm font-medium">Complete steps to unlock full experience</span>
         </div>
-        <Button variant="outline" className="rounded-full gap-2 border-emerald-100 text-emerald-700 hover:bg-emerald-50 bg-white">
-          <ChevronDown className="w-4 h-4" /> Show
+        <Button variant="outline" className="rounded-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-500 hover:text-white bg-white px-8 h-12 text-base font-bold transition-all">
+          <ChevronDown className="w-5 h-5" /> Show
         </Button>
       </motion.div>
 
-      {/* Main Stat Cards */}
+      {/* Grid Stat Cards */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <StatCard 
-          title="Member ID" 
-          value="CN/2025/001" 
+          title="Fellow ID" 
+          value="FE/23/30500829" 
           subtitle="NextGen Cohort"
           icon={CheckCircle2} 
           className="bg-emerald-500 text-white" 
-          check
+          showBadge
         />
         <StatCard 
-          title="Approved Assessments" 
+          title="Approved assessments" 
           value="0" 
-          subtitle="No pending reviews"
-          icon={FileText} 
-          className="bg-slate-900 text-white" 
+          subtitle="Assessment queue clear"
+          icon={Bookmark} 
+          className="bg-slate-800 text-white" 
+          watermark={Bookmark}
         />
         <StatCard 
-          title="Monthly Mandate" 
-          value="₦10,000" 
-          subtitle="Next debit: Mar 28"
-          icon={CreditCard} 
-          className="bg-orange-500 text-white" 
+          title="Progress" 
+          value="0%" 
+          subtitle="Current learning cycle"
+          icon={Bookmark} 
+          className="bg-orange-500 text-white md:col-span-2" 
         />
       </motion.div>
 
-      {/* Recent Activity / Approval Queue */}
+      {/* Admin Task Widget */}
       {role === 'PRESIDENT' && pendingNotifications && pendingNotifications.length > 0 && (
-        <Card className="rounded-2xl border-emerald-50 bg-white shadow-sm overflow-hidden">
-          <CardHeader className="bg-emerald-50/50">
-            <CardTitle className="text-lg font-bold text-emerald-950">Notification Approvals</CardTitle>
-            <CardDescription>Review and dispatch notifications to nominated guarantors.</CardDescription>
+        <Card className="rounded-[2.5rem] border-none bg-white shadow-xl shadow-slate-200/50 overflow-hidden">
+          <CardHeader className="p-8 pb-4">
+            <CardTitle className="text-2xl font-black text-slate-900">Notification Approvals</CardTitle>
+            <CardDescription className="text-base">Review and dispatch notifications to nominated guarantors.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4 pt-6">
+          <CardContent className="p-8 space-y-4">
             {pendingNotifications.map((loan) => (
-              <div key={loan.id} className="flex items-center justify-between p-5 bg-white rounded-2xl border border-emerald-50 shadow-sm hover:border-emerald-200 transition-colors">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center text-emerald-600">
-                    <FileText className="w-6 h-6" />
+              <div key={loan.id} className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-emerald-200 transition-all">
+                <div className="flex items-center gap-6">
+                  <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
+                    <FileText className="w-7 h-7" />
                   </div>
                   <div>
-                    <p className="font-bold text-slate-800">{loan.memberName}</p>
-                    <p className="text-sm text-slate-500">₦{loan.amount.toLocaleString()} Loan Request</p>
+                    <p className="font-black text-xl text-slate-900">{loan.memberName}</p>
+                    <p className="text-slate-500 font-medium">₦{loan.amount.toLocaleString()} Loan Request</p>
                   </div>
                 </div>
                 <Button 
-                  size="sm"
+                  size="lg"
                   disabled={processingId === loan.id}
                   onClick={() => handleApproveNotification(loan)}
-                  className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold h-10 px-6"
+                  className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black px-8 h-14"
                 >
-                  {processingId === loan.id ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Approve & Notify'}
+                  {processingId === loan.id ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Approve & Notify'}
                 </Button>
               </div>
             ))}
@@ -196,29 +204,38 @@ function StatCard({
   subtitle, 
   icon: Icon, 
   className,
-  check = false 
+  showBadge = false,
+  watermark: Watermark
 }: { 
   title: string, 
   value: string, 
   subtitle?: string,
   icon: any, 
   className?: string,
-  check?: boolean
+  showBadge?: boolean,
+  watermark?: any
 }) {
   return (
-    <motion.div variants={itemVariants} className={cn("relative p-7 rounded-3xl shadow-xl flex items-center justify-between overflow-hidden", className)}>
-      <div className="space-y-1 relative z-10">
-        <h3 className="text-xs font-bold opacity-80 uppercase tracking-widest">{title}</h3>
-        <p className="text-2xl font-black font-headline tracking-tight">{value}</p>
-        {subtitle && <p className="text-xs opacity-80 font-medium">{subtitle}</p>}
-      </div>
-      <div className="bg-white/20 p-3.5 rounded-2xl relative z-10 backdrop-blur-sm">
-        <Icon className="w-6 h-6" />
-      </div>
-      {check && (
-        <div className="absolute right-0 bottom-0 opacity-10 translate-x-4 translate-y-4">
-           <CheckCircle2 className="w-32 h-32" />
+    <motion.div variants={itemVariants} className={cn("relative p-10 rounded-[2.5rem] shadow-2xl flex items-center justify-between overflow-hidden group", className)}>
+      <div className="flex items-center gap-8 relative z-10">
+        <div className="w-20 h-20 bg-white/20 rounded-3xl flex items-center justify-center backdrop-blur-sm border border-white/20">
+          <Icon className="w-10 h-10 text-white" />
         </div>
+        <div className="space-y-1">
+          <p className="text-3xl font-black font-headline tracking-tight">{title}</p>
+          <p className="text-lg font-bold opacity-90">{value}</p>
+          {subtitle && <p className="text-sm font-bold opacity-80 uppercase tracking-widest">{subtitle}</p>}
+        </div>
+      </div>
+      
+      {showBadge && (
+        <div className="bg-white/20 p-6 rounded-3xl relative z-10 backdrop-blur-md border border-white/20">
+          <CheckCircle2 className="w-12 h-12 text-white" />
+        </div>
+      )}
+
+      {Watermark && (
+        <Watermark className="absolute -right-8 -bottom-8 w-48 h-48 opacity-10 text-white transition-transform group-hover:scale-110 duration-500" />
       )}
     </motion.div>
   );
