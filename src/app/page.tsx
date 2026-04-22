@@ -1,4 +1,3 @@
-
 "use client"
 
 import Link from 'next/link';
@@ -26,13 +25,13 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen relative overflow-hidden">
+    <div className="flex flex-col min-h-screen relative overflow-hidden bg-emerald-50/20">
       {/* Background Decorative Patterns */}
-      <div className="absolute inset-0 pointer-events-none opacity-[0.05] z-0">
+      <div className="absolute inset-0 pointer-events-none opacity-[0.08] z-0">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_var(--primary)_0px,_transparent_1px)] bg-[length:40px_40px]" />
       </div>
 
-      <header className="px-6 lg:px-12 h-20 flex items-center border-b border-emerald-100/30 bg-white/50 backdrop-blur-md sticky top-0 z-50">
+      <header className="px-6 lg:px-12 h-20 flex items-center border-b border-emerald-100/40 bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
         <Link className="flex items-center justify-center gap-3 group" href="/">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
             {logoUrl ? (
@@ -55,7 +54,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1 relative z-10">
-        <section className="w-full py-20 md:py-32 lg:py-48 flex items-center justify-center">
+        <section className="w-full py-20 md:py-32 lg:py-48 flex items-center justify-center bg-gradient-to-b from-emerald-50/10 to-transparent">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-8 text-center">
               <motion.div 
@@ -89,7 +88,7 @@ export default function Home() {
                     Enter Dashboard <ChevronRight className="w-5 h-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="h-14 px-10 text-lg font-bold rounded-2xl border-emerald-100 bg-white hover:bg-emerald-50 text-emerald-700 transition-all">
+                <Button variant="outline" size="lg" className="h-14 px-10 text-lg font-bold rounded-2xl border-emerald-100 bg-white hover:bg-emerald-50 text-emerald-700 transition-all shadow-md">
                   Request Demo
                 </Button>
               </motion.div>
@@ -97,7 +96,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="features" className="w-full py-24 bg-emerald-50/50 border-y border-emerald-100/50 flex items-center justify-center">
+        <section id="features" className="w-full py-24 bg-emerald-100/30 border-y border-emerald-200/50 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
               <FeatureCard 
@@ -129,7 +128,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-12 w-full px-6 md:px-12 border-t border-emerald-100 flex flex-col sm:flex-row items-center justify-between gap-6 bg-white">
+      <footer className="py-12 w-full px-6 md:px-12 border-t border-emerald-100 flex flex-col sm:flex-row items-center justify-between gap-6 bg-emerald-50/80 backdrop-blur-sm">
         <div className="flex items-center gap-2">
            <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center">
              <ShieldCheck className="w-4 h-4 text-white" />
@@ -150,9 +149,9 @@ function FeatureCard({ icon: Icon, title, description, color }: { icon: any, tit
   return (
     <motion.div 
       whileHover={{ y: -5 }}
-      className="flex flex-col p-8 rounded-[2rem] bg-white border border-emerald-100 shadow-sm hover:shadow-xl hover:shadow-emerald-200/50 transition-all duration-300"
+      className="flex flex-col p-8 rounded-[2rem] bg-white border border-emerald-100 shadow-2xl shadow-emerald-900/5 hover:shadow-emerald-200/60 transition-all duration-300"
     >
-      <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-100`}>
+      <div className={`w-14 h-14 ${color} rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-emerald-100/50`}>
         <Icon className="w-7 h-7 text-white" />
       </div>
       <h3 className="text-xl font-headline font-black mb-3 text-slate-900">{title}</h3>
