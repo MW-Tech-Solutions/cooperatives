@@ -13,17 +13,22 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
   useEffect(() => {
     if (!ref) {
       setLoading(false);
+      setData(null);
       return;
     }
 
+    let isMounted = true;
     setLoading(true);
+
     const unsubscribe = onSnapshot(
       ref,
       (snapshot: DocumentSnapshot<T>) => {
+        if (!isMounted) return;
         setData(snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as T : null);
         setLoading(false);
       },
-      async (serverError) => {
+      (serverError) => {
+        if (!isMounted) return;
         const permissionError = new FirestorePermissionError({
           path: ref.path,
           operation: 'get',
@@ -34,7 +39,10 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
       }
     );
 
-    return () => unsubscribe();
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, [ref]);
 
   return { data, loading, error };

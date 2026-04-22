@@ -7,22 +7,36 @@ import { getAuth, Auth } from 'firebase/auth';
 import { firebaseConfig } from './config';
 import { FirebaseProvider } from './provider';
 
-// Module-level singletons to prevent multiple initializations during hot reloading
+/**
+ * Module-level singletons to prevent multiple initializations.
+ * This is critical to avoid "Unexpected state (ID: b815)" and "ID: ca9" errors 
+ * caused by multiple Firestore instances in a single session.
+ */
 let app: FirebaseApp | undefined;
 let db: Firestore | undefined;
 let auth: Auth | undefined;
 
-if (typeof window !== 'undefined') {
-  app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-  db = getFirestore(app);
-  auth = getAuth(app);
+function initializeFirebase() {
+  if (typeof window !== 'undefined') {
+    if (getApps().length === 0) {
+      app = initializeApp(firebaseConfig);
+      db = getFirestore(app);
+      auth = getAuth(app);
+    } else {
+      app = getApp();
+      db = getFirestore(app);
+      auth = getAuth(app);
+    }
+  }
+  return { app, db, auth };
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
-  // Always wrap in FirebaseProvider, even on the server.
-  // app, db, auth will be undefined on the server, which the hooks handle safely.
+  // Ensure Firebase is only initialized once and strictly reused
+  const fb = React.useMemo(() => initializeFirebase(), []);
+
   return (
-    <FirebaseProvider app={app} db={db} auth={auth}>
+    <FirebaseProvider app={fb.app} db={fb.db} auth={fb.auth}>
       {children}
     </FirebaseProvider>
   );
