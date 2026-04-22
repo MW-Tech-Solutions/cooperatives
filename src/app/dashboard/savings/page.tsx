@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useMemo } from 'react';
@@ -17,13 +16,16 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
+import { useFirestore, useDoc, useMemoFirebase, useUser } from '@/firebase';
 import { doc, addDoc, collection } from 'firebase/firestore';
 import { SystemSettings } from '@/lib/types';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function MemberSavings() {
   const { toast } = useToast();
   const db = useFirestore();
+  const { user } = useUser();
   const [mandateSuccess, setMandateSuccess] = useState(false);
   const [isRequestingLoan, setIsRequestingLoan] = useState(false);
 
@@ -52,12 +54,13 @@ export default function MemberSavings() {
   };
 
   const submitLoanRequest = () => {
-    if (!db || !selectedLoanType) return;
+    if (!db || !selectedLoanType || !user) return;
     setIsRequestingLoan(true);
 
+    const loanCollection = collection(db, 'loans');
     const payload = {
-      userId: 'currentUser-123', // Hardcoded for demo
-      memberName: 'O. Abraham',
+      userId: user.uid,
+      memberName: user.displayName || 'Member',
       amount: loanRequest.amount,
       loanTypeId: loanRequest.loanTypeId,
       status: 'AWAITING_NOTIFICATION_APPROVAL',
@@ -70,10 +73,18 @@ export default function MemberSavings() {
       }))
     };
 
-    addDoc(collection(db, 'loans'), payload)
+    addDoc(loanCollection, payload)
       .then(() => {
         toast({ title: "Request Submitted", description: "The President must approve sending notifications to your nominated guarantors." });
         setIsRequestingLoan(false);
+      })
+      .catch(async (e) => {
+        setIsRequestingLoan(false);
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: loanCollection.path,
+          operation: 'create',
+          requestResourceData: payload
+        }));
       });
   };
 

@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -13,6 +12,8 @@ import { Search, UserPlus, Filter, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { User } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 export default function MemberDirectory() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -32,30 +33,48 @@ export default function MemberDirectory() {
 
   const { data: members, loading } = useCollection<User>(membersQuery);
 
-  const handleApprove = async (member: User) => {
+  const handleApprove = (member: User) => {
     if (!db) return;
     setProcessingId(member.id);
-    try {
-      const userRef = doc(db, 'users', member.id);
-      await updateDoc(userRef, { status: 'Active' });
-      
-      // Log audit trail
-      const auditId = `audit-${Date.now()}`;
-      await setDoc(doc(db, 'auditLogs', auditId), {
-        action: 'Member Approved',
-        actor: 'President',
-        actorRole: 'PRESIDENT',
-        target: member.name,
-        timestamp: new Date().toISOString(),
-        status: 'VERIFIED'
-      });
+    
+    const userRef = doc(db, 'users', member.id);
+    const updateData = { status: 'Active' };
 
-      toast({ title: "Member Approved", description: `${member.name} can now access the portal.` });
-    } catch (e: any) {
-      toast({ variant: "destructive", title: "Approval Failed", description: e.message });
-    } finally {
-      setProcessingId(null);
-    }
+    updateDoc(userRef, updateData)
+      .then(async () => {
+        // Log audit trail
+        const auditId = `audit-${Date.now()}`;
+        const auditRef = doc(db, 'auditLogs', auditId);
+        const auditData = {
+          action: 'Member Approved',
+          actor: 'President',
+          actorRole: 'PRESIDENT',
+          target: member.name,
+          timestamp: new Date().toISOString(),
+          status: 'VERIFIED'
+        };
+
+        setDoc(auditRef, auditData)
+          .catch(async (e) => {
+            errorEmitter.emit('permission-error', new FirestorePermissionError({
+              path: auditRef.path,
+              operation: 'create',
+              requestResourceData: auditData
+            }));
+          });
+
+        toast({ title: "Member Approved", description: `${member.name} can now access the portal.` });
+      })
+      .catch(async (e) => {
+        errorEmitter.emit('permission-error', new FirestorePermissionError({
+          path: userRef.path,
+          operation: 'update',
+          requestResourceData: updateData
+        }));
+      })
+      .finally(() => {
+        setProcessingId(null);
+      });
   };
 
   const filteredMembers = members?.filter(m => 

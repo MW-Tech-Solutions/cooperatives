@@ -20,6 +20,8 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 import { sendGuarantorRequest } from '@/ai/flows/guarantor-notification-flow';
+import { errorEmitter } from '@/firebase/error-emitter';
+import { FirestorePermissionError } from '@/firebase/errors';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -71,12 +73,23 @@ export default function DashboardOverview() {
       }
 
       const loanRef = doc(db, 'loans', loan.id);
-      updateDoc(loanRef, {
+      const updateData = {
         status: 'AWAITING_GUARANTORS',
         notificationsSentAt: new Date().toISOString()
-      });
+      };
 
-      toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan.` });
+      updateDoc(loanRef, updateData)
+        .then(() => {
+          toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan.` });
+        })
+        .catch(async (e) => {
+          errorEmitter.emit('permission-error', new FirestorePermissionError({
+            path: loanRef.path,
+            operation: 'update',
+            requestResourceData: updateData
+          }));
+        });
+
     } catch (e: any) {
       toast({ variant: "destructive", title: "Notification Error", description: e.message });
     } finally {
@@ -96,7 +109,7 @@ export default function DashboardOverview() {
       >
         <div className="relative z-10 max-w-2xl space-y-6">
           <h1 className="text-4xl md:text-5xl font-black font-headline leading-[1.15]">
-            Hello Muhammad, Welcome to your 3MTT Dashboard
+            Hello Fellow, Welcome to your Dashboard
           </h1>
         </div>
         
@@ -121,7 +134,7 @@ export default function DashboardOverview() {
         className="flex flex-col sm:flex-row items-center justify-between p-6 bg-emerald-50/30 border-2 border-emerald-100 rounded-3xl"
       >
         <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
-          <h2 className="font-extrabold text-lg text-slate-800">Complete Your 3MTT Onboarding</h2>
+          <h2 className="font-extrabold text-lg text-slate-800">Complete Your Onboarding</h2>
           <span className="text-emerald-600 font-black text-sm">100% completed.</span>
           <span className="text-slate-500 text-sm font-medium">Complete steps to unlock full experience</span>
         </div>
@@ -138,17 +151,17 @@ export default function DashboardOverview() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <StatCard 
-          title="Fellow ID" 
-          value="FE/23/30500829" 
+          title="Society ID" 
+          value="MB-2025-001" 
           subtitle="NextGen Cohort"
           icon={CheckCircle2} 
           className="bg-emerald-500 text-white" 
           showBadge
         />
         <StatCard 
-          title="Approved assessments" 
+          title="Approved requests" 
           value="0" 
-          subtitle="Assessment queue clear"
+          subtitle="Processing queue clear"
           icon={Bookmark} 
           className="bg-slate-800 text-white" 
           watermark={Bookmark}
@@ -156,7 +169,7 @@ export default function DashboardOverview() {
         <StatCard 
           title="Progress" 
           value="0%" 
-          subtitle="Current learning cycle"
+          subtitle="Current savings cycle"
           icon={Bookmark} 
           className="bg-orange-500 text-white md:col-span-2" 
         />

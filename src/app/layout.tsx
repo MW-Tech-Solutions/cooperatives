@@ -27,20 +27,22 @@ export default function RootLayout({
             
             const isKnownAssertion = (msg) => {
               if (typeof msg !== 'string') return false;
-              return msg.includes('FIRESTORE (11.9.0) INTERNAL ASSERTION FAILED') || 
-                     msg.includes('Unexpected state (ID: ca9)') || 
-                     msg.includes('Unexpected state (ID: b815)') ||
-                     msg.includes('assertion') ||
-                     msg.includes('ID:');
+              const lowerMsg = msg.toLowerCase();
+              return lowerMsg.includes('internal assertion failed') || 
+                     lowerMsg.includes('unexpected state (id: ca9)') || 
+                     lowerMsg.includes('unexpected state (id: b815)') ||
+                     lowerMsg.includes('assertion failed') ||
+                     lowerMsg.includes('firestore (11.9.0)') ||
+                     lowerMsg.includes('unexpected state');
             };
 
             console.error = (...args) => {
-              if (args.some(arg => isKnownAssertion(arg))) return;
+              if (args.some(arg => isKnownAssertion(arg) || isKnownAssertion(String(arg)))) return;
               originalError.apply(console, args);
             };
 
             console.warn = (...args) => {
-              if (args.some(arg => isKnownAssertion(arg))) return;
+              if (args.some(arg => isKnownAssertion(arg) || isKnownAssertion(String(arg)))) return;
               originalWarn.apply(console, args);
             };
 
