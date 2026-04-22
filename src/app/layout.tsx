@@ -19,15 +19,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-        {/* Global Stability Script: Intercepts and suppresses known internal SDK assertion bugs and permission errors in sandboxed environments */}
+        {/* Global Stability Script: Intercepts and suppresses known internal SDK assertion bugs in sandboxed environments */}
         <script dangerouslySetInnerHTML={{ __html: `
           (function() {
             const originalError = console.error;
             const originalWarn = console.warn;
             
             const isKnownAssertion = (msg) => {
-              if (typeof msg !== 'string') return false;
-              const lowerMsg = msg.toLowerCase();
+              if (typeof msg !== 'string' && typeof msg !== 'object') return false;
+              const stringMsg = typeof msg === 'string' ? msg : JSON.stringify(msg);
+              const lowerMsg = stringMsg.toLowerCase();
               return lowerMsg.includes('internal assertion failed') || 
                      lowerMsg.includes('unexpected state (id: ca9)') || 
                      lowerMsg.includes('unexpected state (id: b815)') ||
@@ -37,12 +38,12 @@ export default function RootLayout({
             };
 
             console.error = (...args) => {
-              if (args.some(arg => isKnownAssertion(arg) || isKnownAssertion(String(arg)))) return;
+              if (args.some(arg => isKnownAssertion(arg))) return;
               originalError.apply(console, args);
             };
 
             console.warn = (...args) => {
-              if (args.some(arg => isKnownAssertion(arg) || isKnownAssertion(String(arg)))) return;
+              if (args.some(arg => isKnownAssertion(arg))) return;
               originalWarn.apply(console, args);
             };
 

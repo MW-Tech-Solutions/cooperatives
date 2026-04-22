@@ -24,10 +24,10 @@ function getFirebaseInstance() {
       const apps = getApps();
       const app = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
       
-      // Force singleton for firestore and auth
+      // Force singleton for app, db, and auth to avoid HMR state corruption
       win.__firebase_app_instance = app;
-      win.__firebase_db_instance = win.__firebase_db_instance || getFirestore(app);
-      win.__firebase_auth_instance = win.__firebase_auth_instance || getAuth(app);
+      win.__firebase_db_instance = getFirestore(app);
+      win.__firebase_auth_instance = getAuth(app);
       
       console.log('Firebase services initialized as stable singletons.');
     } catch (error) {
@@ -43,11 +43,11 @@ function getFirebaseInstance() {
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
-  // Use a ref to ensure the context value never changes its reference identity
-  const fb = React.useRef(getFirebaseInstance());
+  // Use React.useMemo to ensure the context value identity is stable across renders
+  const fb = React.useMemo(() => getFirebaseInstance(), []);
 
   return (
-    <FirebaseProvider app={fb.current.app} db={fb.current.db} auth={fb.current.auth}>
+    <FirebaseProvider app={fb.app} db={fb.db} auth={fb.auth}>
       {children}
     </FirebaseProvider>
   );
