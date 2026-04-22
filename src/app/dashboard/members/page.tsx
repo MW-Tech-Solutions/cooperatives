@@ -1,21 +1,29 @@
 
 "use client"
 
-import { useState } from 'react';
-import { collection, query, orderBy } from 'firebase/firestore';
+import { useState, useEffect } from 'react';
+import { collection, query, orderBy, doc, updateDoc, setDoc } from 'firebase/firestore';
 import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Search, UserPlus, Filter, Loader2 } from 'lucide-react';
+import { Search, UserPlus, Filter, Loader2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { User } from '@/lib/types';
+import { useToast } from '@/hooks/use-toast';
 
 export default function MemberDirectory() {
   const [searchTerm, setSearchTerm] = useState('');
   const db = useFirestore();
+  const { toast } = useToast();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [processingId, setProcessingId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setIsAdmin(localStorage.getItem('coopnest_role') === 'PRESIDENT');
+  }, []);
 
   const membersQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -23,6 +31,32 @@ export default function MemberDirectory() {
   }, [db]);
 
   const { data: members, loading } = useCollection<User>(membersQuery);
+
+  const handleApprove = async (member: User) => {
+    if (!db) return;
+    setProcessingId(member.id);
+    try {
+      const userRef = doc(db, 'users', member.id);
+      await updateDoc(userRef, { status: 'Active' });
+      
+      // Log audit trail
+      const auditId = `audit-${Date.now()}`;
+      await setDoc(doc(db, 'auditLogs', auditId), {
+        action: 'Member Approved',
+        actor: 'President',
+        actorRole: 'PRESIDENT',
+        target: member.name,
+        timestamp: new Date().toISOString(),
+        status: 'VERIFIED'
+      });
+
+      toast({ title: "Member Approved", description: `${member.name} can now access the portal.` });
+    } catch (e: any) {
+      toast({ variant: "destructive", title: "Approval Failed", description: e.message });
+    } finally {
+      setProcessingId(null);
+    }
+  };
 
   const filteredMembers = members?.filter(m => 
     m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -105,10 +139,29 @@ export default function MemberDirectory() {
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm">View Profile</Button>
+                      {isAdmin && member.status === 'Pending' ? (
+                        <Button 
+                          size="sm" 
+                          className="gap-2 bg-emerald-600 hover:bg-emerald-700"
+                          disabled={processingId === member.id}
+                          onClick={() => handleApprove(member)}
+                        >
+                          {processingId === member.id ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle2 className="w-4 h-4" />}
+                          Approve
+                        </Button>
+                      ) : (
+                        <Button variant="ghost" size="sm">View Profile</Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
+                {filteredMembers?.length === 0 && (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-20 text-muted-foreground">
+                      No members found in the society directory.
+                    </TableCell>
+                  </TableRow>
+                )}
               </TableBody>
             </Table>
           )}

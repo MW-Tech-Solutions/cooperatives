@@ -3,19 +3,19 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { ShieldCheck, Loader2, Sparkles, Mail, Lock, Heart } from 'lucide-react';
+import { ShieldCheck, Loader2, Sparkles, Mail, Lock, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth, useFirestore } from '@/firebase';
-import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const router = useRouter();
   const auth = useAuth();
   const db = useFirestore();
@@ -23,53 +23,39 @@ export default function LoginPage() {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
-      toast({ variant: "destructive", title: "Error", description: "Please enter both email and password." });
+    if (!email || !password || !name) {
+      toast({ variant: "destructive", title: "Error", description: "All fields are required." });
       return;
     }
 
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Fetch user role from Firestore
-      const userRef = doc(db, 'users', user.uid);
-      const userSnap = await getDoc(userRef);
-
-      if (userSnap.exists()) {
-        const userData = userSnap.data();
-        
-        if (userData.status === 'Pending') {
-          await signOut(auth);
-          toast({ 
-            variant: "destructive", 
-            title: "Account Pending", 
-            description: "Your application is currently being reviewed by the administrator." 
-          });
-          setLoading(false);
-          return;
-        }
-
-        localStorage.setItem('coopnest_role', userData.role || 'MEMBER');
-        toast({ title: "Portal Access Granted", description: `Welcome back, ${userData.name || email}.` });
-        router.push('/dashboard');
-      } else {
-        localStorage.setItem('coopnest_role', 'MEMBER');
-        router.push('/dashboard');
-      }
-    } catch (error: any) {
-      toast({ 
-        variant: "destructive", 
-        title: "Access Denied", 
-        description: error.message.includes('auth/invalid-credential') 
-          ? "The credentials provided do not match our society records." 
-          : error.message 
+      // Create user profile in Firestore with 'Pending' status
+      await setDoc(doc(db, 'users', user.uid), {
+        name,
+        email,
+        role: 'MEMBER',
+        memberId: `MB-${Math.floor(1000 + Math.random() * 9000)}`,
+        status: 'Pending',
+        joinDate: new Date().toISOString().split('T')[0],
+        totalSavings: 0
       });
+
+      toast({ 
+        title: "Registration Successful", 
+        description: "Your account is awaiting administrator approval. You will be able to login once approved." 
+      });
+      router.push('/login');
+    } catch (error: any) {
+      toast({ variant: "destructive", title: "Registration Error", description: error.message });
     } finally {
       setLoading(false);
     }
@@ -96,14 +82,28 @@ export default function LoginPage() {
               </div>
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">Member Portal</CardTitle>
+              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">Join Society</CardTitle>
               <CardDescription className="text-base font-medium text-slate-500 px-4">
-                Enter your credentials to access the secure governance dashboard.
+                Apply for membership to access the cooperative portal.
               </CardDescription>
             </div>
           </CardHeader>
-          <form onSubmit={handleLogin}>
-            <CardContent className="space-y-6 px-10">
+          <form onSubmit={handleRegister}>
+            <CardContent className="space-y-4 px-10">
+              <div className="space-y-2">
+                <Label htmlFor="name" className="text-slate-800 font-black ml-1 uppercase text-[10px] tracking-widest">Full Name</Label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <Input 
+                    id="name"
+                    placeholder="John Doe" 
+                    className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
               <div className="space-y-2">
                 <Label htmlFor="email" className="text-slate-800 font-black ml-1 uppercase text-[10px] tracking-widest">Email Address</Label>
                 <div className="relative">
@@ -111,8 +111,8 @@ export default function LoginPage() {
                   <Input 
                     id="email"
                     type="email" 
-                    placeholder="e.g. member@css.com" 
-                    className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500 transition-all font-medium"
+                    placeholder="john@example.com" 
+                    className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     disabled={loading}
@@ -127,7 +127,7 @@ export default function LoginPage() {
                     id="password"
                     type="password" 
                     placeholder="••••••••" 
-                    className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500 transition-all font-medium"
+                    className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     disabled={loading}
@@ -138,18 +138,18 @@ export default function LoginPage() {
             <CardFooter className="px-10 pb-12 pt-4 flex flex-col gap-6">
               <Button 
                 type="submit" 
-                className="w-full h-16 text-lg font-black bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-xl shadow-emerald-200 transition-all active:scale-[0.98] disabled:opacity-80"
+                className="w-full h-16 text-lg font-black bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-xl shadow-emerald-200 transition-all"
                 disabled={loading}
               >
                 {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : (
                   <span className="flex items-center gap-2">
-                    <Sparkles className="w-5 h-5" /> Authenticate Access
+                    <Sparkles className="w-5 h-5" /> Submit Application
                   </span>
                 )}
               </Button>
               <div className="flex flex-col items-center gap-2">
                 <p className="text-center text-xs text-slate-500 font-medium">
-                  New here? <Link href="/register" className="text-emerald-600 font-bold hover:underline">Apply for Membership</Link>
+                  Already a member? <Link href="/login" className="text-emerald-600 font-bold hover:underline">Sign In</Link>
                 </p>
                 <div className="flex items-center gap-1.5 opacity-40">
                   <Heart className="w-3 h-3 fill-emerald-600 text-emerald-600" />

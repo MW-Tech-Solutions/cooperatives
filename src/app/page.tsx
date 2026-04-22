@@ -82,7 +82,7 @@ export default function Home() {
             <Link href="/login">Portal Login</Link>
           </Button>
           <Button asChild className="rounded-full px-8 font-black bg-emerald-600 shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95">
-            <Link href="/login">Join Society</Link>
+            <Link href="/register">Join Society</Link>
           </Button>
         </nav>
 
@@ -95,9 +95,9 @@ export default function Home() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-white/95 backdrop-blur-xl border-emerald-100">
-              <SheetHeader className="sr-only">
-                <SheetTitle>Navigation Menu</SheetTitle>
-                <SheetDescription>Mobile navigation options for the society portal.</SheetDescription>
+              <SheetHeader className="text-left border-b border-emerald-50 pb-4">
+                <SheetTitle className="text-2xl font-black text-emerald-950">Navigation</SheetTitle>
+                <SheetDescription>Access society resources and member portal.</SheetDescription>
               </SheetHeader>
               <div className="flex flex-col gap-6 pt-12">
                 <Link href="#purpose" className="text-xl font-black text-emerald-950">Our Purpose</Link>
@@ -107,7 +107,7 @@ export default function Home() {
                   <Link href="/login">Member Login</Link>
                 </Button>
                 <Button asChild variant="outline" className="h-14 rounded-2xl border-emerald-200 font-bold">
-                  <Link href="/login">Become a Member</Link>
+                  <Link href="/register">Become a Member</Link>
                 </Button>
               </div>
             </SheetContent>
@@ -251,7 +251,7 @@ export default function Home() {
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center relative z-10">
                 <Button asChild className="h-16 px-12 text-lg font-black rounded-2xl bg-white text-emerald-950 hover:bg-emerald-50 transition-all">
-                  <Link href="/login">Apply for Membership</Link>
+                  <Link href="/register">Apply for Membership</Link>
                 </Button>
                 <Button asChild variant="outline" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-500/30 text-emerald-100 bg-transparent hover:bg-white/5">
                   <Link href="#purpose">Learn More</Link>
