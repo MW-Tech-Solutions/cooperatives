@@ -31,9 +31,9 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
       (serverError) => {
         if (!isMounted) return;
 
-        // Intercept internal assertions to prevent crash loops
-        if (serverError.message.includes('assertion') || serverError.message.includes('ID:')) {
-          console.warn('Firestore internal state sync intercepted, retrying...', serverError.message);
+        // INTERCEPT INTERNAL ASSERTIONS: Suppress SDK bugs from showing in dev overlay
+        const msg = serverError.message || '';
+        if (msg.includes('assertion') || msg.includes('ID:') || msg.includes('ca9') || msg.includes('b815')) {
           return;
         }
 

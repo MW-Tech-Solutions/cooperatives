@@ -2,40 +2,45 @@
 
 import React from 'react';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore } from 'firebase/firestore';
+import { getFirestore, Firestore, terminate } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
 import { firebaseConfig } from './config';
 import { FirebaseProvider } from './provider';
 
 /**
- * Module-level singletons to prevent multiple initializations.
- * This is critical to avoid "Unexpected state (ID: b815)" and "ID: ca9" errors 
- * caused by multiple Firestore instances in a single session.
+ * Enhanced Singleton Pattern for Next.js Development
+ * Attaching instances to the window object ensures they persist across HMR (Hot Module Replacement)
+ * preventing "Unexpected state (ID: b815)" and "ID: ca9" errors.
  */
-let appInstance: FirebaseApp | undefined;
-let dbInstance: Firestore | undefined;
-let authInstance: Auth | undefined;
-
 function getFirebaseInstance() {
   if (typeof window === 'undefined') {
     return { app: undefined, db: undefined, auth: undefined };
   }
 
-  if (!appInstance) {
+  const win = window as any;
+
+  if (!win.__firebase_app_instance) {
     try {
-      appInstance = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
-      dbInstance = getFirestore(appInstance);
-      authInstance = getAuth(appInstance);
+      const apps = getApps();
+      win.__firebase_app_instance = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
+      win.__firebase_db_instance = getFirestore(win.__firebase_app_instance);
+      win.__firebase_auth_instance = getAuth(win.__firebase_app_instance);
+      
+      console.log('Firebase services initialized as singletons.');
     } catch (error) {
       console.error('Firebase initialization failed:', error);
     }
   }
 
-  return { app: appInstance, db: dbInstance, auth: authInstance };
+  return { 
+    app: win.__firebase_app_instance, 
+    db: win.__firebase_db_instance, 
+    auth: win.__firebase_auth_instance 
+  };
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
-  // Use a ref-based approach for absolute stability across re-renders
+  // Use a ref to ensure the context value never changes its reference identity
   const fb = React.useRef(getFirebaseInstance());
 
   return (
