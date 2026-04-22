@@ -41,7 +41,7 @@ export default function MemberDirectory() {
     const updateData = { status: 'Active' };
 
     updateDoc(userRef, updateData)
-      .then(async () => {
+      .then(() => {
         // Log audit trail
         const auditId = `audit-${Date.now()}`;
         const auditRef = doc(db, 'auditLogs', auditId);

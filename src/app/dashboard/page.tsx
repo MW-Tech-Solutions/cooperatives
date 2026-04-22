@@ -62,46 +62,51 @@ export default function DashboardOverview() {
     setRole(localStorage.getItem('coopnest_role') as UserRole || 'MEMBER');
   }, []);
 
-  const handleApproveNotification = async (loan: Loan) => {
+  const handleApproveNotification = (loan: Loan) => {
     if (!db || !settings) return;
     setProcessingId(loan.id);
 
-    try {
-      if (loan.guarantors) {
-        for (const g of loan.guarantors) {
-          await sendGuarantorRequest({
-            memberName: loan.memberName,
-            guarantorName: g.name,
-            guarantorEmail: `${g.userId.toLowerCase()}@society.com`,
-            loanAmount: loan.amount,
-            systemName: settings.branding?.systemName || 'CoopNest'
-          });
+    // AI Logic for notification simulation
+    const runNotification = async () => {
+      try {
+        if (loan.guarantors) {
+          for (const g of loan.guarantors) {
+            await sendGuarantorRequest({
+              memberName: loan.memberName,
+              guarantorName: g.name,
+              guarantorEmail: `${g.userId.toLowerCase()}@society.com`,
+              loanAmount: loan.amount,
+              systemName: settings.branding?.systemName || 'CoopNest'
+            });
+          }
         }
+
+        const loanRef = doc(db, 'loans', loan.id);
+        const updateData = {
+          status: 'AWAITING_GUARANTORS',
+          notificationsSentAt: new Date().toISOString()
+        };
+
+        updateDoc(loanRef, updateData)
+          .then(() => {
+            toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan.` });
+          })
+          .catch(async (e) => {
+            errorEmitter.emit('permission-error', new FirestorePermissionError({
+              path: loanRef.path,
+              operation: 'update',
+              requestResourceData: updateData
+            }));
+          });
+
+      } catch (e: any) {
+        toast({ variant: "destructive", title: "Notification Error", description: e.message });
+      } finally {
+        setProcessingId(null);
       }
+    };
 
-      const loanRef = doc(db, 'loans', loan.id);
-      const updateData = {
-        status: 'AWAITING_GUARANTORS',
-        notificationsSentAt: new Date().toISOString()
-      };
-
-      updateDoc(loanRef, updateData)
-        .then(() => {
-          toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan.` });
-        })
-        .catch(async (e) => {
-          errorEmitter.emit('permission-error', new FirestorePermissionError({
-            path: loanRef.path,
-            operation: 'update',
-            requestResourceData: updateData
-          }));
-        });
-
-    } catch (e: any) {
-      toast({ variant: "destructive", title: "Notification Error", description: e.message });
-    } finally {
-      setProcessingId(null);
-    }
+    runNotification();
   };
 
   if (!role) return null;
