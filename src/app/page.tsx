@@ -19,7 +19,7 @@ import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { SystemSettings } from '@/lib/types';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 
 export default function Home() {
   const db = useFirestore();
@@ -95,6 +95,10 @@ export default function Home() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="bg-white/95 backdrop-blur-xl border-emerald-100">
+              <SheetHeader className="sr-only">
+                <SheetTitle>Navigation Menu</SheetTitle>
+                <SheetDescription>Mobile navigation options for the society portal.</SheetDescription>
+              </SheetHeader>
               <div className="flex flex-col gap-6 pt-12">
                 <Link href="#purpose" className="text-xl font-black text-emerald-950">Our Purpose</Link>
                 <Link href="#governance" className="text-xl font-black text-emerald-950">Governance</Link>
