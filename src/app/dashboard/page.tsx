@@ -14,7 +14,7 @@ import {
   Calendar
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useFirestore, useDoc, useCollection, useMemoFirebase } from '@/firebase';
+import { useFirestore, useDoc, useCollection, useMemoFirebase, useUser } from '@/firebase';
 import { doc, query, collection, where, updateDoc } from 'firebase/firestore';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
@@ -38,12 +38,16 @@ const itemVariants = {
 
 export default function DashboardOverview() {
   const [role, setRole] = useState<UserRole | null>(null);
+  const { user } = useUser();
   const db = useFirestore();
   const { toast } = useToast();
   const [processingId, setProcessingId] = useState<string | null>(null);
   
   const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
   const { data: settings } = useDoc<SystemSettings>(settingsRef);
+
+  const userProfileRef = useMemoFirebase(() => (db && user) ? doc(db, 'users', user.uid) : null, [db, user]);
+  const { data: userProfile } = useDoc<any>(userProfileRef);
 
   const pendingNotifQuery = useMemoFirebase(() => {
     if (!db) return null;
@@ -109,24 +113,27 @@ export default function DashboardOverview() {
       >
         <div className="relative z-10 max-w-2xl space-y-6">
           <h1 className="text-4xl md:text-5xl font-black font-headline leading-[1.15]">
-            Hello Fellow, Welcome to your Dashboard
+            Welcome back, {userProfile?.name?.split(' ')[0] || 'Member'}
           </h1>
+          <p className="text-xl text-emerald-50 font-medium leading-relaxed opacity-90">
+            Building collective wealth through shared trust and transparent governance.
+          </p>
         </div>
         
         {/* Decorative Assets */}
         <div className="absolute right-12 bottom-0 w-1/3 h-full hidden lg:block opacity-90">
           <img 
-            src="https://picsum.photos/seed/hero/600/400" 
+            src="https://picsum.photos/seed/coophero/600/400" 
             alt="Hero" 
             className="w-full h-full object-cover rounded-t-3xl border-x-8 border-t-8 border-white/10"
-            data-ai-hint="happy people" 
+            data-ai-hint="cooperative community" 
           />
         </div>
         <Bookmark className="absolute top-10 left-1/2 opacity-10 w-24 h-24" />
         <Calendar className="absolute bottom-10 right-10 opacity-10 w-24 h-24" />
       </motion.div>
 
-      {/* Onboarding Banner */}
+      {/* Society Status Banner */}
       <motion.div 
         variants={itemVariants}
         initial="hidden"
@@ -134,12 +141,12 @@ export default function DashboardOverview() {
         className="flex flex-col sm:flex-row items-center justify-between p-6 bg-emerald-50/30 border-2 border-emerald-100 rounded-3xl"
       >
         <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
-          <h2 className="font-extrabold text-lg text-slate-800">Complete Your Onboarding</h2>
-          <span className="text-emerald-600 font-black text-sm">100% completed.</span>
-          <span className="text-slate-500 text-sm font-medium">Complete steps to unlock full experience</span>
+          <h2 className="font-extrabold text-lg text-slate-800">Society Standing</h2>
+          <span className="text-emerald-600 font-black text-sm">Member ID: {userProfile?.memberId || 'MB-0000'}</span>
+          <span className="text-slate-500 text-sm font-medium">| Profile status: {userProfile?.status || 'Active'}</span>
         </div>
         <Button variant="outline" className="rounded-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-500 hover:text-white bg-white px-8 h-12 text-base font-bold transition-all">
-          <ChevronDown className="w-5 h-5" /> Show
+          <ChevronDown className="w-5 h-5" /> View Bylaws
         </Button>
       </motion.div>
 
@@ -151,25 +158,25 @@ export default function DashboardOverview() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <StatCard 
-          title="Society ID" 
-          value="MB-2025-001" 
-          subtitle="NextGen Cohort"
+          title="Total Savings" 
+          value={`₦${(userProfile?.totalSavings || 0).toLocaleString()}`} 
+          subtitle="Mutual Pool Contribution"
           icon={CheckCircle2} 
           className="bg-emerald-500 text-white" 
           showBadge
         />
         <StatCard 
-          title="Approved requests" 
-          value="0" 
-          subtitle="Processing queue clear"
+          title="Loan Eligibility" 
+          value="3x Multiplier" 
+          subtitle="Based on Consistency"
           icon={Bookmark} 
           className="bg-slate-800 text-white" 
           watermark={Bookmark}
         />
         <StatCard 
-          title="Progress" 
-          value="0%" 
-          subtitle="Current savings cycle"
+          title="Dividend Forecast" 
+          value="₦0.00" 
+          subtitle="Estimated Annual Returns"
           icon={Bookmark} 
           className="bg-orange-500 text-white md:col-span-2" 
         />
