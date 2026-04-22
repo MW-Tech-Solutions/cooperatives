@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -37,7 +38,9 @@ export default function MemberDirectory() {
   const [isAdding, setIsAdding] = useState(false);
 
   useEffect(() => {
-    setIsAdmin(localStorage.getItem('coopnest_role') === 'PRESIDENT');
+    if (typeof window !== 'undefined') {
+      setIsAdmin(localStorage.getItem('coopnest_role') === 'PRESIDENT');
+    }
   }, []);
 
   const membersQuery = useMemoFirebase(() => {

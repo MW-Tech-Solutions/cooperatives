@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useEffect, useState } from 'react';
@@ -59,7 +60,9 @@ export default function DashboardOverview() {
   const { data: pendingNotifications } = useCollection<Loan>(pendingNotifQuery);
 
   useEffect(() => {
-    setRole(localStorage.getItem('coopnest_role') as UserRole || 'MEMBER');
+    if (typeof window !== 'undefined') {
+      setRole(localStorage.getItem('coopnest_role') as UserRole || 'MEMBER');
+    }
   }, []);
 
   const handleApproveNotification = (loan: Loan) => {
