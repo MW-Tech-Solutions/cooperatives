@@ -11,7 +11,6 @@ import {
   Loader2,
   ChevronDown,
   FileText,
-  Bookmark,
   Calendar,
   Wallet,
   TrendingUp,
@@ -69,7 +68,6 @@ export default function DashboardOverview() {
     if (!db || !settings) return;
     setProcessingId(loan.id);
 
-    // AI Logic for notification simulation
     const runNotification = async () => {
       try {
         if (loan.guarantors) {
@@ -116,7 +114,6 @@ export default function DashboardOverview() {
 
   return (
     <div className="space-y-8 max-w-6xl mx-auto pb-10">
-      {/* Hero Section */}
       <motion.div 
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -124,14 +121,13 @@ export default function DashboardOverview() {
       >
         <div className="relative z-10 max-w-2xl space-y-6">
           <h1 className="text-4xl md:text-5xl font-black font-headline leading-[1.15]">
-            Greetings, {userProfile?.name?.split(' ')[0] || 'Member'}
+            Welcome back, {userProfile?.name?.split(' ')[0] || 'Member'}
           </h1>
           <p className="text-xl text-emerald-50 font-medium leading-relaxed opacity-90">
-            Advancing collective wealth through transparent governance and mutual prosperity.
+            Driving collective wealth through ethical governance and mutual society prosperity.
           </p>
         </div>
         
-        {/* Decorative Assets */}
         <div className="absolute right-12 bottom-0 w-1/3 h-full hidden lg:block opacity-90">
           <img 
             src="https://picsum.photos/seed/coophero/600/400" 
@@ -144,7 +140,6 @@ export default function DashboardOverview() {
         <Calendar className="absolute bottom-10 right-10 opacity-10 w-24 h-24" />
       </motion.div>
 
-      {/* Society Status Banner */}
       <motion.div 
         variants={itemVariants}
         initial="hidden"
@@ -152,16 +147,15 @@ export default function DashboardOverview() {
         className="flex flex-col sm:flex-row items-center justify-between p-6 bg-emerald-50/30 border-2 border-emerald-100 rounded-3xl"
       >
         <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
-          <h2 className="font-extrabold text-lg text-slate-800">Member Standing</h2>
-          <span className="text-emerald-600 font-black text-sm">Member ID: {userProfile?.memberId || 'MB-0000'}</span>
-          <span className="text-slate-500 text-sm font-medium">| Profile Status: {userProfile?.status || 'Active'}</span>
+          <h2 className="font-extrabold text-lg text-slate-800">Society Standing</h2>
+          <span className="text-emerald-600 font-black text-sm">Registry ID: {userProfile?.memberId || 'MB-0000'}</span>
+          <span className="text-slate-500 text-sm font-medium">| Member Status: {userProfile?.status || 'Active'}</span>
         </div>
         <Button variant="outline" className="rounded-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-500 hover:text-white bg-white px-8 h-12 text-base font-bold transition-all">
           <ChevronDown className="w-5 h-5" /> Society Bylaws
         </Button>
       </motion.div>
 
-      {/* Grid Stat Cards */}
       <motion.div 
         variants={containerVariants}
         initial="hidden"
@@ -169,9 +163,9 @@ export default function DashboardOverview() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <StatCard 
-          title="Personal Savings" 
+          title="Mutual Savings" 
           value={`₦${(userProfile?.totalSavings || 0).toLocaleString()}`} 
-          subtitle="Mutual Pool Contribution"
+          subtitle="Collective Asset Pool"
           icon={Wallet} 
           className="bg-emerald-500 text-white" 
           showBadge
@@ -179,7 +173,7 @@ export default function DashboardOverview() {
         <StatCard 
           title="Credit Eligibility" 
           value="3x Multiplier" 
-          subtitle="Based on Consistency"
+          subtitle="Based on Contribution Tenure"
           icon={TrendingUp} 
           className="bg-slate-800 text-white" 
           watermark={TrendingUp}
@@ -187,18 +181,17 @@ export default function DashboardOverview() {
         <StatCard 
           title="Dividend Forecast" 
           value="₦0.00" 
-          subtitle="Estimated Annual Returns"
+          subtitle="Estimated Surplus Distribution"
           icon={CheckCircle2} 
           className="bg-orange-500 text-white md:col-span-2" 
         />
       </motion.div>
 
-      {/* Admin Task Widget */}
       {role === 'PRESIDENT' && pendingNotifications && pendingNotifications.length > 0 && (
         <Card className="rounded-[2.5rem] border-none bg-white shadow-xl shadow-slate-200/50 overflow-hidden">
           <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-2xl font-black text-slate-900">Governance Tasks</CardTitle>
-            <CardDescription className="text-base">Review and dispatch notifications for pending loan requests.</CardDescription>
+            <CardTitle className="text-2xl font-black text-slate-900">Governance Workflow</CardTitle>
+            <CardDescription className="text-base">Review and authorize guarantor notifications for pending credit requests.</CardDescription>
           </CardHeader>
           <CardContent className="p-8 space-y-4">
             {pendingNotifications.map((loan) => (
@@ -209,7 +202,7 @@ export default function DashboardOverview() {
                   </div>
                   <div>
                     <p className="font-black text-xl text-slate-900">{loan.memberName}</p>
-                    <p className="text-slate-500 font-medium">₦{loan.amount.toLocaleString()} Loan Request</p>
+                    <p className="text-slate-500 font-medium">₦{loan.amount.toLocaleString()} Credit Application</p>
                   </div>
                 </div>
                 <Button 

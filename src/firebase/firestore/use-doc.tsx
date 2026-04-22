@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -31,15 +32,14 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
       (serverError) => {
         if (!isMounted) return;
 
-        // INTERCEPT INTERNAL ASSERTIONS: Suppress SDK bugs from showing in dev overlay
         const msg = serverError.message || '';
         const isInternalBug = msg.includes('assertion') || 
-                              msg.includes('ID:') || 
-                              msg.includes('ca9') || 
-                              msg.includes('b815') || 
-                              msg.includes('unexpected state');
+                              msg.includes('ID: ca9') || 
+                              msg.includes('ID: b815') ||
+                              msg.includes('Unexpected state');
 
         if (isInternalBug) {
+          setLoading(false);
           return;
         }
 

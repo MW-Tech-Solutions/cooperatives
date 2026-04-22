@@ -1,3 +1,4 @@
+
 "use client"
 
 import Link from 'next/link';
@@ -30,19 +31,18 @@ export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: Sid
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, roles: ['PRESIDENT', 'ASSISTANT_PRESIDENT', 'SECRETARY_GENERAL', 'TREASURER', 'AUDITOR', 'MEMBER'] },
-    { name: 'My Savings', href: '/dashboard/savings', icon: Wallet, roles: ['MEMBER'] },
-    { name: 'Directory', href: '/dashboard/members', icon: Users, roles: ['PRESIDENT', 'ASSISTANT_PRESIDENT', 'SECRETARY_GENERAL', 'TREASURER', 'AUDITOR'] },
+    { name: 'My Wealth', href: '/dashboard/savings', icon: Wallet, roles: ['MEMBER'] },
+    { name: 'Registry', href: '/dashboard/members', icon: Users, roles: ['PRESIDENT', 'ASSISTANT_PRESIDENT', 'SECRETARY_GENERAL', 'TREASURER', 'AUDITOR'] },
     { name: 'Treasury', href: '/dashboard/treasury', icon: CreditCard, roles: ['PRESIDENT', 'TREASURER'] },
-    { name: 'Audit', href: '/dashboard/audit', icon: Search, roles: ['PRESIDENT', 'AUDITOR'] },
-    { name: 'Control', href: '/dashboard/governance', icon: ShieldAlert, roles: ['PRESIDENT', 'SECRETARY_GENERAL'] },
-    { name: 'Settings', href: '/dashboard/settings', icon: Settings, roles: ['PRESIDENT'] },
+    { name: 'Audit Hub', href: '/dashboard/audit', icon: Search, roles: ['PRESIDENT', 'AUDITOR'] },
+    { name: 'Governance', href: '/dashboard/governance', icon: ShieldAlert, roles: ['PRESIDENT', 'SECRETARY_GENERAL'] },
+    { name: 'System Settings', href: '/dashboard/settings', icon: Settings, roles: ['PRESIDENT'] },
   ];
 
   const filteredItems = navItems.filter(item => item.roles.includes(role));
 
   return (
     <>
-      {/* Desktop Sidebar */}
       <aside className="w-72 glass-sidebar hidden md:flex flex-col h-screen sticky top-0 z-50">
         <div className="p-8">
           <Link href="/dashboard" className="flex items-center gap-3 group">
@@ -87,12 +87,11 @@ export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: Sid
             className="flex items-center gap-4 px-4 py-3 text-sm font-bold text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
-            Logout System
+            Sign Out Securely
           </Link>
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-[100] h-20 bg-white border-t border-emerald-100 flex items-stretch px-2 pb-safe shadow-2xl">
         {filteredItems.slice(0, 5).map((item) => {
           const isActive = pathname === item.href;
