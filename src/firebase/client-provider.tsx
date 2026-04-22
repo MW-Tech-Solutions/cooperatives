@@ -12,31 +12,34 @@ import { FirebaseProvider } from './provider';
  * This is critical to avoid "Unexpected state (ID: b815)" and "ID: ca9" errors 
  * caused by multiple Firestore instances in a single session.
  */
-let app: FirebaseApp | undefined;
-let db: Firestore | undefined;
-let auth: Auth | undefined;
+let appInstance: FirebaseApp | undefined;
+let dbInstance: Firestore | undefined;
+let authInstance: Auth | undefined;
 
-function initializeFirebase() {
-  if (typeof window !== 'undefined') {
-    if (getApps().length === 0) {
-      app = initializeApp(firebaseConfig);
-      db = getFirestore(app);
-      auth = getAuth(app);
-    } else {
-      app = getApp();
-      db = getFirestore(app);
-      auth = getAuth(app);
+function getFirebaseInstance() {
+  if (typeof window === 'undefined') {
+    return { app: undefined, db: undefined, auth: undefined };
+  }
+
+  if (!appInstance) {
+    try {
+      appInstance = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+      dbInstance = getFirestore(appInstance);
+      authInstance = getAuth(appInstance);
+    } catch (error) {
+      console.error('Firebase initialization failed:', error);
     }
   }
-  return { app, db, auth };
+
+  return { app: appInstance, db: dbInstance, auth: authInstance };
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
-  // Ensure Firebase is only initialized once and strictly reused
-  const fb = React.useMemo(() => initializeFirebase(), []);
+  // Use a ref-based approach for absolute stability across re-renders
+  const fb = React.useRef(getFirebaseInstance());
 
   return (
-    <FirebaseProvider app={fb.app} db={fb.db} auth={fb.auth}>
+    <FirebaseProvider app={fb.current.app} db={fb.current.db} auth={fb.current.auth}>
       {children}
     </FirebaseProvider>
   );

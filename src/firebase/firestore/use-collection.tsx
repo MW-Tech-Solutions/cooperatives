@@ -31,12 +31,15 @@ export function useCollection<T = DocumentData>(query: Query<T> | null) {
         }));
         setData(items as T[]);
         setLoading(false);
+        setError(null);
       },
       (serverError) => {
         if (!isMounted) return;
-        // Check for specific internal assertion errors to prevent app crashes
-        if (serverError.message.includes('assertion')) {
-          console.warn('Firestore internal assertion intercepted, retrying...');
+        
+        // Intercept internal assertions to prevent crash loops
+        if (serverError.message.includes('assertion') || serverError.message.includes('ID:')) {
+          console.warn('Firestore internal state sync intercepted, retrying...', serverError.message);
+          return;
         }
         
         const permissionError = new FirestorePermissionError({

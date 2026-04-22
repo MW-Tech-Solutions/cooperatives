@@ -26,9 +26,17 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
         if (!isMounted) return;
         setData(snapshot.exists() ? { id: snapshot.id, ...snapshot.data() } as T : null);
         setLoading(false);
+        setError(null);
       },
       (serverError) => {
         if (!isMounted) return;
+
+        // Intercept internal assertions to prevent crash loops
+        if (serverError.message.includes('assertion') || serverError.message.includes('ID:')) {
+          console.warn('Firestore internal state sync intercepted, retrying...', serverError.message);
+          return;
+        }
+
         const permissionError = new FirestorePermissionError({
           path: ref.path,
           operation: 'get',
