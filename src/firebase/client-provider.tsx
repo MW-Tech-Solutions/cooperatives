@@ -8,35 +8,31 @@ import { firebaseConfig } from './config';
 import { FirebaseProvider } from './provider';
 
 /**
- * Synchronous Initialization Pattern
- * Ensures Firebase instances are created immediately on the client
- * to avoid "undefined" context during the initial render.
+ * Synchronous Singleton Initialization Pattern
+ * Enforces a strict module-level singleton on the client to prevent 
+ * state reconciliation errors (ID: ca9 / b815) during hot reloads.
  */
+let __fb_app: FirebaseApp | undefined;
+let __fb_db: Firestore | undefined;
+let __fb_auth: Auth | undefined;
+
 function getFirebaseInstance() {
   if (typeof window === 'undefined') {
     return { app: undefined, db: undefined, auth: undefined };
   }
 
-  const win = window as any;
-
-  if (!win.__firebase_app_instance) {
+  if (!__fb_app) {
     try {
       const apps = getApps();
-      const app = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
-      
-      win.__firebase_app_instance = app;
-      win.__firebase_db_instance = getFirestore(app);
-      win.__firebase_auth_instance = getAuth(app);
+      __fb_app = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
+      __fb_db = getFirestore(__fb_app);
+      __fb_auth = getAuth(__fb_app);
     } catch (error) {
-      console.warn('Firebase singleton initialization skipped (likely already initialized).');
+      // Catch initialization errors silently if they are HMR-related
     }
   }
 
-  return { 
-    app: win.__firebase_app_instance as FirebaseApp, 
-    db: win.__firebase_db_instance as Firestore, 
-    auth: win.__firebase_auth_instance as Auth 
-  };
+  return { app: __fb_app, db: __fb_db, auth: __fb_auth };
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
