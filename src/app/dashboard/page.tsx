@@ -11,7 +11,10 @@ import {
   ChevronDown,
   FileText,
   Bookmark,
-  Calendar
+  Calendar,
+  Wallet,
+  TrendingUp,
+  Scale
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useDoc, useCollection, useMemoFirebase, useUser } from '@/firebase';
@@ -129,7 +132,7 @@ export default function DashboardOverview() {
             data-ai-hint="cooperative community" 
           />
         </div>
-        <Bookmark className="absolute top-10 left-1/2 opacity-10 w-24 h-24" />
+        <Scale className="absolute top-10 left-1/2 opacity-10 w-24 h-24" />
         <Calendar className="absolute bottom-10 right-10 opacity-10 w-24 h-24" />
       </motion.div>
 
@@ -161,7 +164,7 @@ export default function DashboardOverview() {
           title="Total Savings" 
           value={`₦${(userProfile?.totalSavings || 0).toLocaleString()}`} 
           subtitle="Mutual Pool Contribution"
-          icon={CheckCircle2} 
+          icon={Wallet} 
           className="bg-emerald-500 text-white" 
           showBadge
         />
@@ -169,15 +172,15 @@ export default function DashboardOverview() {
           title="Loan Eligibility" 
           value="3x Multiplier" 
           subtitle="Based on Consistency"
-          icon={Bookmark} 
+          icon={TrendingUp} 
           className="bg-slate-800 text-white" 
-          watermark={Bookmark}
+          watermark={TrendingUp}
         />
         <StatCard 
           title="Dividend Forecast" 
           value="₦0.00" 
           subtitle="Estimated Annual Returns"
-          icon={Bookmark} 
+          icon={CheckCircle2} 
           className="bg-orange-500 text-white md:col-span-2" 
         />
       </motion.div>

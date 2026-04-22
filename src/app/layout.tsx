@@ -32,7 +32,6 @@ export default function RootLayout({
               return lowerMsg.includes('internal assertion failed') || 
                      lowerMsg.includes('id: ca9') || 
                      lowerMsg.includes('id: b815') ||
-                     lowerMsg.includes('assertion failed') ||
                      lowerMsg.includes('firestore (11.9.0)') ||
                      lowerMsg.includes('internal unhandled error') ||
                      lowerMsg.includes('unexpected state');
