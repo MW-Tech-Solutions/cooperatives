@@ -28,7 +28,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
-      toast({ variant: "destructive", title: "Error", description: "Please enter both email and password." });
+      toast({ variant: "destructive", title: "Missing Credentials", description: "Please enter both email and password." });
       return;
     }
 
@@ -49,16 +49,18 @@ export default function LoginPage() {
           toast({ 
             variant: "destructive", 
             title: "Account Pending", 
-            description: "Your application is currently being reviewed by the administrator." 
+            description: "Your membership application is currently being reviewed by the administrator." 
           });
           setLoading(false);
           return;
         }
 
+        // Store role for immediate UI feedback in layout
         localStorage.setItem('coopnest_role', userData.role || 'MEMBER');
         toast({ title: "Portal Access Granted", description: `Welcome back, ${userData.name || email}.` });
         router.push('/dashboard');
       } else {
+        // Handle case where auth user exists but no Firestore profile exists yet
         localStorage.setItem('coopnest_role', 'MEMBER');
         router.push('/dashboard');
       }
@@ -67,8 +69,8 @@ export default function LoginPage() {
         variant: "destructive", 
         title: "Access Denied", 
         description: error.message.includes('auth/invalid-credential') 
-          ? "The credentials provided do not match our society records." 
-          : error.message 
+          ? "The credentials provided do not match our records." 
+          : "Authentication failed. Please check your connection."
       });
     } finally {
       setLoading(false);
@@ -76,10 +78,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-emerald-50/30 p-4 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500 rounded-full blur-[150px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-emerald-500 rounded-full blur-[150px]" />
+    <div className="min-h-screen flex items-center justify-center bg-emerald-50/40 p-4 relative overflow-hidden">
+      <div className="absolute top-0 left-0 w-full h-full opacity-[0.08] pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-emerald-500 rounded-full blur-[180px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-emerald-500 rounded-full blur-[180px]" />
       </div>
 
       <motion.div
@@ -88,10 +90,10 @@ export default function LoginPage() {
         transition={{ duration: 0.4 }}
         className="w-full max-w-md"
       >
-        <Card className="border-emerald-100/50 shadow-2xl bg-white/90 backdrop-blur-2xl rounded-[3rem] overflow-hidden">
+        <Card className="border-emerald-100/50 shadow-2xl bg-white/95 backdrop-blur-2xl rounded-[3rem] overflow-hidden">
           <CardHeader className="space-y-4 text-center pt-12">
             <div className="flex justify-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200">
+              <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200">
                 <ShieldCheck className="w-10 h-10 text-white" />
               </div>
             </div>
@@ -111,7 +113,7 @@ export default function LoginPage() {
                   <Input 
                     id="email"
                     type="email" 
-                    placeholder="e.g. member@css.com" 
+                    placeholder="member@css.com" 
                     className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500 transition-all font-medium"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -149,11 +151,11 @@ export default function LoginPage() {
               </Button>
               <div className="flex flex-col items-center gap-2">
                 <p className="text-center text-xs text-slate-500 font-medium">
-                  New here? <Link href="/register" className="text-emerald-600 font-bold hover:underline">Apply for Membership</Link>
+                  New member? <Link href="/register" className="text-emerald-600 font-bold hover:underline">Apply for Membership</Link>
                 </p>
-                <div className="flex items-center gap-1.5 opacity-40">
+                <div className="flex items-center gap-1.5 opacity-40 mt-2">
                   <Heart className="w-3 h-3 fill-emerald-600 text-emerald-600" />
-                  <span className="text-[10px] font-black uppercase text-slate-900 tracking-widest">Mutual Prosperity</span>
+                  <span className="text-[10px] font-black uppercase text-slate-900 tracking-widest">Mutual Success</span>
                 </div>
               </div>
             </CardFooter>

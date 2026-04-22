@@ -96,7 +96,7 @@ export default function RegisterPage() {
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                   <Input 
                     id="name"
-                    placeholder="John Doe" 
+                    placeholder="Kenneth Salihu" 
                     className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -111,7 +111,7 @@ export default function RegisterPage() {
                   <Input 
                     id="email"
                     type="email" 
-                    placeholder="john@example.com" 
+                    placeholder="salejohn@society.com" 
                     className="h-14 pl-12 bg-slate-50/50 border-slate-100 rounded-2xl focus:ring-emerald-500"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
