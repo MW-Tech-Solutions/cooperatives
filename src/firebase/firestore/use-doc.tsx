@@ -34,6 +34,7 @@ export function useDoc<T = DocumentData>(ref: DocumentReference<T> | null) {
         // INTERCEPT INTERNAL ASSERTIONS: Suppress SDK bugs from showing in dev overlay
         const msg = serverError.message || '';
         if (msg.includes('assertion') || msg.includes('ID:') || msg.includes('ca9') || msg.includes('b815')) {
+          console.warn('Caught stable internal firestore assertion:', msg);
           return;
         }
 

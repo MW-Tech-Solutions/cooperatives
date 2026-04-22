@@ -22,11 +22,14 @@ function getFirebaseInstance() {
   if (!win.__firebase_app_instance) {
     try {
       const apps = getApps();
-      win.__firebase_app_instance = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
-      win.__firebase_db_instance = getFirestore(win.__firebase_app_instance);
-      win.__firebase_auth_instance = getAuth(win.__firebase_app_instance);
+      const app = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
       
-      console.log('Firebase services initialized as singletons.');
+      // Force singleton for firestore and auth
+      win.__firebase_app_instance = app;
+      win.__firebase_db_instance = win.__firebase_db_instance || getFirestore(app);
+      win.__firebase_auth_instance = win.__firebase_auth_instance || getAuth(app);
+      
+      console.log('Firebase services initialized as stable singletons.');
     } catch (error) {
       console.error('Firebase initialization failed:', error);
     }
