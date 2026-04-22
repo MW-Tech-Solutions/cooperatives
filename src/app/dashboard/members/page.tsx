@@ -98,7 +98,6 @@ export default function MemberDirectory() {
         };
 
         setDoc(auditRef, auditData).catch(() => {});
-
         toast({ title: "Member Approved", description: `${member.name} can now access the portal.` });
       })
       .catch(async (e) => {
@@ -133,37 +132,37 @@ export default function MemberDirectory() {
               <UserPlus className="w-5 h-5" /> Add Member
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[425px] rounded-[2rem] border-slate-100">
+          <DialogContent className="sm:max-w-[425px] rounded-[2rem] border-slate-100 bg-white shadow-2xl">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-black font-headline">New Member Entry</DialogTitle>
+              <DialogTitle className="text-2xl font-black font-headline text-slate-900">New Member Entry</DialogTitle>
               <DialogDescription className="font-medium text-slate-500">
                 Manually register a member into the society directory.
               </DialogDescription>
             </DialogHeader>
             <div className="grid gap-6 py-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="font-bold ml-1">Full Name</Label>
+                <Label htmlFor="name" className="font-bold ml-1 text-slate-700">Full Name</Label>
                 <Input 
                   id="name" 
                   placeholder="Kenneth Salihu" 
-                  className="h-12 bg-slate-50 border-slate-100 rounded-xl"
+                  className="h-12 bg-slate-50 border-slate-100 rounded-xl focus:ring-emerald-500"
                   value={newMember.name}
                   onChange={(e) => setNewMember({...newMember, name: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="font-bold ml-1">Email Address</Label>
+                <Label htmlFor="email" className="font-bold ml-1 text-slate-700">Email Address</Label>
                 <Input 
                   id="email" 
                   type="email"
-                  placeholder="k.salihu@css.com" 
-                  className="h-12 bg-slate-50 border-slate-100 rounded-xl"
+                  placeholder="k.salihu@coop.com" 
+                  className="h-12 bg-slate-50 border-slate-100 rounded-xl focus:ring-emerald-500"
                   value={newMember.email}
                   onChange={(e) => setNewMember({...newMember, email: e.target.value})}
                 />
               </div>
               <div className="space-y-2">
-                <Label className="font-bold ml-1">Governance Role</Label>
+                <Label className="font-bold ml-1 text-slate-700">Governance Role</Label>
                 <Select 
                   onValueChange={(val) => setNewMember({...newMember, role: val as UserRole})}
                   defaultValue="MEMBER"
@@ -171,7 +170,7 @@ export default function MemberDirectory() {
                   <SelectTrigger className="h-12 bg-slate-50 border-slate-100 rounded-xl">
                     <SelectValue placeholder="Select role" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border-slate-100">
+                  <SelectContent className="rounded-xl border-slate-100 bg-white">
                     <SelectItem value="MEMBER">Member</SelectItem>
                     <SelectItem value="TREASURER">Treasurer</SelectItem>
                     <SelectItem value="SECRETARY_GENERAL">Secretary General</SelectItem>
@@ -184,7 +183,7 @@ export default function MemberDirectory() {
               <Button 
                 onClick={handleAddMember} 
                 disabled={isAdding} 
-                className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl"
+                className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-lg shadow-emerald-200"
               >
                 {isAdding ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Confirm Registration'}
               </Button>
@@ -301,7 +300,7 @@ export default function MemberDirectory() {
 
       {/* View Profile Modal */}
       <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
-        <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] border-slate-100 p-0 overflow-hidden">
+        <DialogContent className="sm:max-w-[500px] rounded-[2.5rem] border-slate-100 p-0 overflow-hidden bg-white shadow-2xl">
           {selectedMember && (
             <div className="space-y-0">
               <div className="bg-emerald-600 p-10 text-white relative">

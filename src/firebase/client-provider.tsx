@@ -8,31 +8,39 @@ import { firebaseConfig } from './config';
 import { FirebaseProvider } from './provider';
 
 /**
- * Synchronous Singleton Initialization Pattern
- * Enforces a strict module-level singleton on the client to prevent 
- * state reconciliation errors (ID: ca9 / b815) during hot reloads.
+ * Global Singleton Pattern for Firebase
+ * Attaching to window ensures instances survive Next.js HMR refreshes 
+ * and prevents "INTERNAL ASSERTION FAILED" (ca9/b815) errors.
  */
-let __fb_app: FirebaseApp | undefined;
-let __fb_db: Firestore | undefined;
-let __fb_auth: Auth | undefined;
+declare global {
+  interface Window {
+    __FIREBASE_APP__?: FirebaseApp;
+    __FIREBASE_DB__?: Firestore;
+    __FIREBASE_AUTH__?: Auth;
+  }
+}
 
 function getFirebaseInstance() {
   if (typeof window === 'undefined') {
     return { app: undefined, db: undefined, auth: undefined };
   }
 
-  if (!__fb_app) {
+  if (!window.__FIREBASE_APP__) {
     try {
       const apps = getApps();
-      __fb_app = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
-      __fb_db = getFirestore(__fb_app);
-      __fb_auth = getAuth(__fb_app);
+      window.__FIREBASE_APP__ = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
+      window.__FIREBASE_DB__ = getFirestore(window.__FIREBASE_APP__);
+      window.__FIREBASE_AUTH__ = getAuth(window.__FIREBASE_APP__);
     } catch (error) {
       // Catch initialization errors silently if they are HMR-related
     }
   }
 
-  return { app: __fb_app, db: __fb_db, auth: __fb_auth };
+  return { 
+    app: window.__FIREBASE_APP__, 
+    db: window.__FIREBASE_DB__, 
+    auth: window.__FIREBASE_AUTH__ 
+  };
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {

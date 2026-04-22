@@ -41,7 +41,10 @@ export default function RootLayout({
             const isKnownPermissionError = (msg) => {
               if (!msg) return false;
               const stringMsg = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
-              return stringMsg.includes('NotAllowedError') || stringMsg.includes('Clipboard');
+              const lowerMsg = stringMsg.toLowerCase();
+              return lowerMsg.includes('notallowederror') || 
+                     lowerMsg.includes('clipboard') || 
+                     lowerMsg.includes('permission denied');
             };
 
             console.error = function(...args) {
