@@ -26,23 +26,23 @@ export default function RootLayout({
             const originalWarn = console.warn;
             
             const isKnownAssertion = (msg) => {
-              if (typeof msg !== 'string' && typeof msg !== 'object') return false;
-              const stringMsg = typeof msg === 'string' ? msg : JSON.stringify(msg);
+              if (!msg) return false;
+              const stringMsg = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
               const lowerMsg = stringMsg.toLowerCase();
               return lowerMsg.includes('internal assertion failed') || 
-                     lowerMsg.includes('unexpected state (id: ca9)') || 
-                     lowerMsg.includes('unexpected state (id: b815)') ||
+                     lowerMsg.includes('id: ca9') || 
+                     lowerMsg.includes('id: b815') ||
                      lowerMsg.includes('assertion failed') ||
                      lowerMsg.includes('firestore (11.9.0)') ||
                      lowerMsg.includes('unexpected state');
             };
 
-            console.error = (...args) => {
+            console.error = function(...args) {
               if (args.some(arg => isKnownAssertion(arg))) return;
               originalError.apply(console, args);
             };
 
-            console.warn = (...args) => {
+            console.warn = function(...args) {
               if (args.some(arg => isKnownAssertion(arg))) return;
               originalWarn.apply(console, args);
             };
@@ -53,14 +53,15 @@ export default function RootLayout({
                 event.stopImmediatePropagation();
                 event.preventDefault();
               }
-            });
+            }, true);
 
             window.addEventListener('error', (event) => {
-              if (isKnownAssertion(event.message)) {
+              const msg = event.message || (event.error && event.error.message);
+              if (isKnownAssertion(msg)) {
                 event.stopImmediatePropagation();
                 event.preventDefault();
               }
-            });
+            }, true);
           })();
         `}} />
       </head>
