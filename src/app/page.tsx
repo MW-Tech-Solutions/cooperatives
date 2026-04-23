@@ -137,7 +137,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 pt-12 relative z-10">
+      <main className="flex-1 pt-4 relative z-10">
         <section className="w-full py-12 md:py-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
@@ -333,7 +333,7 @@ export default function Home() {
                       <p className="text-xs font-medium text-slate-500">Funding community projects and educational scholarships.</p>
                     </div>
                   </div>
-                  <div className="pt-12 space-y-6">
+                  <div className="space-y-6">
                     <div className="p-8 rounded-[2rem] bg-orange-500 text-white shadow-xl shadow-orange-200">
                       <TrendingUp className="w-8 h-8 mb-6 opacity-80" />
                       <h4 className="text-xl font-black mb-2">Sustainable ROI</h4>
