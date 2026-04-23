@@ -68,12 +68,10 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen relative bg-emerald-50/20">
-      {/* Background patterns */}
       <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-0">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--primary)_0px,_transparent_1px)] bg-[length:40px_40px]" />
       </div>
 
-      {/* Header */}
       <header className={`fixed top-0 left-0 right-0 h-20 flex items-center px-6 lg:px-16 z-[100] transition-all duration-300 ${
         isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
       }`}>
@@ -92,7 +90,7 @@ export default function Home() {
           <Link className="text-sm font-bold text-emerald-900 hover:text-emerald-600 transition-colors" href="#mission">Our Mission</Link>
           <Link className="text-sm font-bold text-emerald-900 hover:text-emerald-600 transition-colors" href="#products">Services</Link>
           <Link className="text-sm font-bold text-emerald-900 hover:text-emerald-600 transition-colors" href="#governance">Governance</Link>
-          <Button asChild variant="ghost" className="font-bold text-emerald-900 hover:bg-emerald-50 hover:text-emerald-700">
+          <Button asChild variant="ghost" className="font-bold text-emerald-700 hover:bg-emerald-50">
             <Link href="/login">Portal Login</Link>
           </Button>
           <Button asChild className="rounded-full px-8 font-black bg-emerald-600 shadow-xl shadow-emerald-200 hover:bg-emerald-700 transition-all hover:scale-105 active:scale-95">
@@ -130,7 +128,6 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-20 relative z-10">
-        {/* Hero Section */}
         <section className="w-full py-24 md:py-40 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
@@ -167,15 +164,14 @@ export default function Home() {
                     Start Saving Now <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-200 bg-white/40 backdrop-blur-sm hover:bg-emerald-50 text-emerald-700 transition-all shadow-lg">
-                  Portal Login
+                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-200 bg-white/40 backdrop-blur-sm text-emerald-700 transition-all shadow-lg">
+                  <Link href="/login">Portal Login</Link>
                 </Button>
               </motion.div>
             </div>
           </div>
         </section>
 
-        {/* Impact Stats */}
         <section id="impact" className="w-full py-20 bg-emerald-950 text-white flex items-center justify-center overflow-hidden relative">
           <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
             <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-emerald-400 rounded-full blur-[120px]" />
@@ -197,7 +193,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Cooperative Products */}
         <section id="products" className="w-full py-32 bg-white flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
@@ -261,7 +256,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Governance Cycle */}
         <section id="governance" className="w-full py-32 bg-slate-50 flex items-center justify-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-1/2 h-full bg-emerald-100/20 skew-x-12 translate-x-1/4 pointer-events-none" />
           <div className="container px-4 md:px-6 relative z-10">
@@ -317,7 +311,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Global Network / Social Section */}
         <section className="w-full py-32 bg-white flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
@@ -369,7 +362,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* FAQ Section */}
         <section className="w-full py-32 bg-slate-50 flex items-center justify-center">
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
@@ -415,7 +407,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* CTA Section */}
         <section className="w-full py-24 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="bg-emerald-600 rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
@@ -432,7 +423,7 @@ export default function Home() {
                 <Button asChild size="lg" className="h-16 px-16 text-lg font-black rounded-2xl bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl transition-all hover:scale-105 active:scale-95">
                   <Link href="/register">Sign Up in 5 Minutes</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-16 px-16 text-lg font-bold rounded-2xl border-white/30 text-white hover:bg-white/10 backdrop-blur-sm transition-all">
+                <Button asChild variant="outline" size="lg" className="h-16 px-16 text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-transparent transition-all">
                   <Link href="/login">Access Portal</Link>
                 </Button>
               </div>
@@ -441,7 +432,6 @@ export default function Home() {
         </section>
       </main>
 
-      {/* Footer */}
       <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/50 backdrop-blur-sm">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
