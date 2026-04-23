@@ -35,6 +35,7 @@ import { SystemSettings } from '@/lib/types';
 import { motion } from 'framer-motion';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function Home() {
   const db = useFirestore();
@@ -53,6 +54,7 @@ export default function Home() {
 
   const systemName = settings?.branding?.systemName || 'CoopNest';
   const logoUrl = settings?.branding?.logoUrl || '';
+  const heroBgImage = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl || '/coins-glass-jar-money-saving-financial-concept.jpg';
 
   if (loading) {
     return (
@@ -72,7 +74,7 @@ export default function Home() {
       {/* Background Wallpaper */}
       <div className="fixed inset-0 -z-20 w-full h-full">
         <img 
-          src="https://picsum.photos/seed/coopwall/1920/1080" 
+          src={heroBgImage} 
           alt="Wallpaper" 
           className="w-full h-full object-cover"
           data-ai-hint="corporate background"

@@ -4,7 +4,7 @@
     {
       "id": "hero-bg",
       "description": "Professional cooperative society workspace",
-      "imageUrl": "https://picsum.photos/seed/coop1/1200/800",
+      "imageUrl": "/coins-glass-jar-money-saving-financial-concept.jpg",
       "imageHint": "office workspace professional"
     },
     {
@@ -16,7 +16,7 @@
     {
       "id": "landing-wallpaper",
       "description": "Professional wallpaper for the landing page",
-      "imageUrl": "https://picsum.photos/seed/coopwall/1920/1080",
+      "imageUrl": "/coins-glass-jar-money-saving-financial-concept.jpg",
       "imageHint": "corporate workspace professional"
     }
   ]
