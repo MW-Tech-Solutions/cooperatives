@@ -36,7 +36,8 @@ export default function RootLayout({
                      l.includes('id: b815') ||
                      l.includes('notallowederror') ||
                      l.includes('clipboard') ||
-                     l.includes('firestore (11.9.0)');
+                     l.includes('firestore (11.9.0)') ||
+                     l.includes('firebase: firestore (11.9.0)');
             };
 
             console.error = function(...args) {

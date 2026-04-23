@@ -20,6 +20,7 @@ function getFirebaseInstance() {
     return { app: undefined, db: undefined, auth: undefined };
   }
 
+  // Strictly use a global singleton to prevent re-initialization during HMR
   if (!window.__FIREBASE_APP__) {
     try {
       const apps = getApps();
@@ -27,7 +28,7 @@ function getFirebaseInstance() {
       window.__FIREBASE_DB__ = getFirestore(window.__FIREBASE_APP__);
       window.__FIREBASE_AUTH__ = getAuth(window.__FIREBASE_APP__);
     } catch (error) {
-      // Fail silently for HMR
+      // Fail silently to prevent dev overlay crash
     }
   }
 
@@ -39,6 +40,7 @@ function getFirebaseInstance() {
 }
 
 export function FirebaseClientProvider({ children }: { children: React.ReactNode }) {
+  // useMemo ensures the context values don't change unnecessarily across renders
   const fb = useMemo(() => getFirebaseInstance(), []);
 
   return (
