@@ -146,7 +146,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-8"
               >
-                <h1 className="text-5xl font-headline font-black tracking-tighter sm:text-7xl md:text-8xl lg:text-9xl/none max-w-[1200px] text-slate-900 leading-[0.95]">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl max-w-[1000px] text-slate-900 leading-tight">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-600 font-medium md:text-xl lg:text-2xl leading-relaxed">
