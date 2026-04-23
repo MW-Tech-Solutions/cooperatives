@@ -6,7 +6,6 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/avatar-fix';
 import { Badge } from '@/components/ui/badge';
 import { Search, UserPlus, Filter, Loader2, Edit3, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,8 +16,6 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-
-// Fixing potential avatar import path issue if it was moved
 import { Avatar as UIAvatar, AvatarFallback as UIAvatarFallback, AvatarImage as UIAvatarImage } from '@/components/ui/avatar';
 
 export default function MemberDirectory() {
