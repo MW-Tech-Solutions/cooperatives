@@ -17,6 +17,12 @@
       "description": "Professional wallpaper for the landing page",
       "imageUrl": "/coins-glass-jar-money-saving-financial-concept.jpg",
       "imageHint": "corporate workspace professional"
+    },
+    {
+      "id": "governance-img",
+      "description": "Governance and transparency symbol",
+      "imageUrl": "/4515.jpg",
+      "imageHint": "governance protection"
     }
   ]
 }

@@ -10,17 +10,12 @@ import {
   Users, 
   Heart, 
   ChevronRight, 
-  Gavel, 
   Menu, 
   Sparkles,
-  ArrowRight,
   Target,
-  Handshake,
-  PieChart,
   ShieldAlert,
   HelpCircle,
   Plus,
-  Wallet,
   Coins,
   Scale,
   Building2,
@@ -55,6 +50,7 @@ export default function Home() {
   const systemName = settings?.branding?.systemName || 'CoopNest';
   const logoUrl = settings?.branding?.logoUrl || '';
   const heroBgImage = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl || '/coins-glass-jar-money-saving-financial-concept.jpg';
+  const governanceImg = PlaceHolderImages.find(img => img.id === 'governance-img')?.imageUrl || '/4515.jpg';
 
   if (loading) {
     return (
@@ -304,7 +300,7 @@ export default function Home() {
               
               <div className="flex-1 relative">
                 <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl shadow-emerald-200 border-8 border-white">
-                  <img src="https://picsum.photos/seed/governance/800/1000" alt="Governance Meeting" className="w-full h-auto" />
+                  <img src={governanceImg} alt="Governance Meeting" className="w-full h-auto" />
                   <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center">
