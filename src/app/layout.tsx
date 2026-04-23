@@ -15,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
@@ -28,17 +28,22 @@ export default function RootLayout({
             
             const isForbidden = (msg) => {
               if (!msg) return false;
-              const s = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
-              const l = s.toLowerCase();
-              return l.includes('internal unhandled error') || 
-                     l.includes('internal assertion failed') || 
-                     l.includes('unexpected state') ||
-                     l.includes('id: ca9') || 
-                     l.includes('id: b815') ||
-                     l.includes('notallowederror') ||
-                     l.includes('clipboard') ||
-                     l.includes('firestore (11.9.0)') ||
-                     l.includes('firebase: firestore (11.9.0)');
+              try {
+                const s = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
+                const l = s.toLowerCase();
+                return l.includes('internal unhandled error') || 
+                       l.includes('internal assertion failed') || 
+                       l.includes('unexpected state') ||
+                       l.includes('id: ca9') || 
+                       l.includes('id: b815') ||
+                       l.includes('notallowederror') ||
+                       l.includes('clipboard') ||
+                       l.includes('firestore (11.9.0)') ||
+                       l.includes('firebase: firestore (11.9.0)') ||
+                       l.includes('@firebase/firestore');
+              } catch (e) {
+                return false;
+              }
             };
 
             console.error = function(...args) {
