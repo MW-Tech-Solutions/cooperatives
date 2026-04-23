@@ -68,10 +68,21 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen relative bg-emerald-50/20">
-      <div className="fixed inset-0 pointer-events-none opacity-[0.05] z-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--primary)_0px,_transparent_1px)] bg-[length:40px_40px]" />
+    <div className="flex flex-col min-h-screen relative">
+      {/* Background Wallpaper */}
+      <div className="fixed inset-0 -z-20 w-full h-full">
+        <img 
+          src="https://picsum.photos/seed/coopwall/1920/1080" 
+          alt="Wallpaper" 
+          className="w-full h-full object-cover"
+          data-ai-hint="corporate background"
+        />
+        {/* Darkening Overlay for readability */}
+        <div className="absolute inset-0 bg-black/5" />
       </div>
+
+      {/* Glass transparent effect at the top of the wallpaper */}
+      <div className="fixed top-0 left-0 right-0 h-64 bg-white/10 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,black_20%,transparent)] pointer-events-none" />
 
       <header className={`fixed top-0 left-0 right-0 h-20 flex items-center px-6 lg:px-16 z-[100] transition-all duration-300 ${
         isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
@@ -128,14 +139,14 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 pt-20 relative z-10">
+      <main className="flex-1 pt-12 relative z-10">
         <section className="w-full py-12 md:py-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-emerald-100/80 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-sm backdrop-blur-sm"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/80 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-sm backdrop-blur-sm"
               >
                 <Award className="w-3.5 h-3.5 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -146,10 +157,10 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-8"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl max-w-[1000px] text-slate-900 leading-tight">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-5xl lg:text-5xl max-w-[1000px] text-slate-900 leading-tight">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
-                <p className="mx-auto max-w-[800px] text-slate-600 font-medium md:text-xl lg:text-2xl leading-relaxed">
+                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
                   Experience the power of mutual aid. We leverage collective savings to provide members with bank-grade financial security, affordable credit, and shared annual dividends.
                 </p>
               </motion.div>
@@ -165,7 +176,7 @@ export default function Home() {
                     Start Saving Now <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-600 bg-white/40 backdrop-blur-sm text-emerald-700 transition-all shadow-lg hover:bg-emerald-50">
+                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-emerald-950/20 backdrop-blur-sm transition-all">
                   <Link href="/login">Portal Login</Link>
                 </Button>
               </motion.div>
@@ -173,10 +184,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="impact" className="w-full py-20 bg-emerald-950 text-white flex items-center justify-center overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-full opacity-10 pointer-events-none">
-            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-emerald-400 rounded-full blur-[120px]" />
-          </div>
+        <section id="impact" className="w-full py-20 bg-emerald-950/90 backdrop-blur-md text-white flex items-center justify-center overflow-hidden relative">
           <div className="container px-4 md:px-6 relative z-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
               {[
@@ -194,13 +202,13 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="products" className="w-full py-32 bg-white flex items-center justify-center">
+        <section id="products" className="w-full py-32 bg-white/95 backdrop-blur-sm flex items-center justify-center border-t border-emerald-100">
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em]">
                 Member Services
               </div>
-              <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
+              <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
                 Financial Solutions for <span className="text-emerald-600">Every Stage</span>
               </h2>
               <p className="text-lg text-slate-600 font-medium">Our products are designed to support your personal and professional milestones through ethical financial engineering.</p>
@@ -257,8 +265,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="governance" className="w-full py-32 bg-slate-50 flex items-center justify-center relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-emerald-100/20 skew-x-12 translate-x-1/4 pointer-events-none" />
+        <section id="governance" className="w-full py-32 bg-slate-50/95 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border-y border-emerald-100">
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col lg:flex-row gap-20 items-center">
               <div className="flex-1 space-y-10">
@@ -266,7 +273,7 @@ export default function Home() {
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
                     Governance Model
                   </div>
-                  <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
                     Transparency as our <br /><span className="text-emerald-600">Core Mandate</span>
                   </h2>
                   <p className="text-lg text-slate-600 font-medium leading-relaxed">
@@ -306,13 +313,12 @@ export default function Home() {
                     <p className="text-xs font-medium text-slate-600 leading-relaxed">All board resolutions and voting records are cryptographically secured and archived for perpetual member access.</p>
                   </div>
                 </div>
-                <div className="absolute -top-10 -right-10 w-48 h-48 bg-emerald-400 rounded-full blur-[100px] opacity-20" />
               </div>
             </div>
           </div>
         </section>
 
-        <section className="w-full py-32 bg-white flex items-center justify-center">
+        <section className="w-full py-32 bg-white/95 backdrop-blur-sm flex items-center justify-center border-b border-emerald-100">
           <div className="container px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div className="order-2 md:order-1">
@@ -363,7 +369,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-32 bg-slate-50 flex items-center justify-center">
+        <section className="w-full py-32 bg-slate-50/95 backdrop-blur-sm flex items-center justify-center">
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
@@ -410,12 +416,12 @@ export default function Home() {
 
         <section className="w-full py-24 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="bg-emerald-600 rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
+            <div className="bg-emerald-600/90 backdrop-blur-md rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
               <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
                 <Sparkles className="w-[400px] h-[400px]" />
               </div>
               <div className="space-y-4 relative z-10">
-                <h2 className="text-4xl md:text-7xl font-black font-headline tracking-tighter">Join the Movement</h2>
+                <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Join the Movement</h2>
                 <p className="max-w-2xl mx-auto text-emerald-50 text-lg md:text-xl font-medium">
                   Thousands of members have already secured their financial future. Join us today and let's grow together.
                 </p>
@@ -433,7 +439,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/50 backdrop-blur-sm">
+      <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/90 backdrop-blur-md">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
             <div className="col-span-1 md:col-span-2 space-y-8">
@@ -443,7 +449,7 @@ export default function Home() {
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>
-              <p className="text-base text-slate-500 font-medium leading-relaxed max-w-sm">
+              <p className="text-base text-slate-600 font-bold leading-relaxed max-w-sm">
                 A democratically governed financial ecosystem dedicated to the economic empowerment and mutual prosperity of its members through collective strength and ethical management.
               </p>
               <div className="flex gap-4">

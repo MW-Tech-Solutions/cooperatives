@@ -12,6 +12,12 @@
       "description": "User profile avatar",
       "imageUrl": "https://picsum.photos/seed/user1/200/200",
       "imageHint": "person portrait"
+    },
+    {
+      "id": "landing-wallpaper",
+      "description": "Professional wallpaper for the landing page",
+      "imageUrl": "https://picsum.photos/seed/coopwall/1920/1080",
+      "imageHint": "corporate workspace professional"
     }
   ]
 }
