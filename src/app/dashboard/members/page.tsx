@@ -6,7 +6,7 @@ import { useFirestore, useCollection, useMemoFirebase } from '@/firebase';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/avatar-fix';
 import { Badge } from '@/components/ui/badge';
 import { Search, UserPlus, Filter, Loader2, Edit3, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -17,6 +17,9 @@ import { FirestorePermissionError } from '@/firebase/errors';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+
+// Fixing potential avatar import path issue if it was moved
+import { Avatar as UIAvatar, AvatarFallback as UIAvatarFallback, AvatarImage as UIAvatarImage } from '@/components/ui/avatar';
 
 export default function MemberDirectory() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -46,7 +49,8 @@ export default function MemberDirectory() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setIsAdmin(localStorage.getItem('coopnest_role') === 'PRESIDENT');
+      const userRole = localStorage.getItem('coopnest_role');
+      setIsAdmin(userRole === 'PRESIDENT');
     }
   }, []);
 
@@ -73,9 +77,10 @@ export default function MemberDirectory() {
 
     addDoc(usersCol, payload)
       .then(() => {
-        toast({ title: "Member Registered", description: `${newMember.name} has been added to the society.` });
+        toast({ title: "Member Registered", description: `${newMember.name} has been enrolled in the society.` });
         setIsAddModalOpen(false);
         setNewMember({ name: '', email: '', role: 'MEMBER', status: 'Active' });
+        logAudit('Manual Enrollment', newMember.name!);
       })
       .catch(async (e) => {
         errorEmitter.emit('permission-error', new FirestorePermissionError({
@@ -96,9 +101,9 @@ export default function MemberDirectory() {
 
     updateDoc(userRef, updateData)
       .then(() => {
-        toast({ title: "Profile Updated", description: "Member details synchronized successfully." });
+        toast({ title: "Registry Synchronized", description: "Member governance details updated successfully." });
         setIsEditModalOpen(false);
-        logAudit('Profile Modified', selectedMember.name);
+        logAudit('Member Data Modified', selectedMember.name);
       })
       .catch(async (e) => {
         errorEmitter.emit('permission-error', new FirestorePermissionError({
@@ -115,7 +120,7 @@ export default function MemberDirectory() {
     const logId = `audit-${Date.now()}`;
     setDoc(doc(db, 'auditLogs', logId), {
       action,
-      actor: 'President',
+      actor: 'System Admin',
       actorRole: 'PRESIDENT',
       target,
       timestamp: new Date().toISOString(),
@@ -124,9 +129,9 @@ export default function MemberDirectory() {
   };
 
   const filteredMembers = members?.filter(m => 
-    m.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    m.memberId.toLowerCase().includes(searchTerm.toLowerCase())
+    m.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    m.memberId?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -140,13 +145,13 @@ export default function MemberDirectory() {
         {isAdmin && (
           <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
             <DialogTrigger asChild>
-              <Button className="gap-2 shadow-lg shadow-primary/20 bg-emerald-600 hover:bg-emerald-700 font-bold h-12 rounded-2xl px-6 transition-all active:scale-95">
+              <Button className="gap-2 shadow-lg shadow-emerald-200/50 bg-emerald-600 hover:bg-emerald-700 font-bold h-12 rounded-2xl px-6 transition-all active:scale-95">
                 <UserPlus className="w-5 h-5" /> Enroll New Member
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px] rounded-[2.5rem] border-slate-100 bg-white shadow-2xl p-8">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-black font-headline text-slate-900">New Society Enrollment</DialogTitle>
+                <DialogTitle className="text-2xl font-black font-headline text-slate-900">New Enrollment</DialogTitle>
                 <DialogDescription className="font-medium text-slate-500">
                   Manually register an individual into the cooperative registry.
                 </DialogDescription>
@@ -155,7 +160,7 @@ export default function MemberDirectory() {
                 <div className="space-y-2">
                   <Label className="font-bold ml-1 text-slate-700">Full Legal Name</Label>
                   <Input 
-                    placeholder="e.g. Samuel Abioye" 
+                    placeholder="Kenneth Salihu" 
                     className="h-12 bg-slate-50 border-slate-100 rounded-xl focus:ring-emerald-500"
                     value={newMember.name}
                     onChange={(e) => setNewMember({...newMember, name: e.target.value})}
@@ -165,14 +170,14 @@ export default function MemberDirectory() {
                   <Label className="font-bold ml-1 text-slate-700">Official Email</Label>
                   <Input 
                     type="email"
-                    placeholder="s.abioye@society.org" 
+                    placeholder="k.salihu@society.org" 
                     className="h-12 bg-slate-50 border-slate-100 rounded-xl focus:ring-emerald-500"
                     value={newMember.email}
                     onChange={(e) => setNewMember({...newMember, email: e.target.value})}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label className="font-bold ml-1 text-slate-700">Assigned Governance Role</Label>
+                  <Label className="font-bold ml-1 text-slate-700">Society Role</Label>
                   <Select onValueChange={(val) => setNewMember({...newMember, role: val as UserRole})} defaultValue="MEMBER">
                     <SelectTrigger className="h-12 bg-slate-50 border-slate-100 rounded-xl">
                       <SelectValue placeholder="Assign role" />
@@ -182,6 +187,7 @@ export default function MemberDirectory() {
                       <SelectItem value="TREASURER">Treasurer</SelectItem>
                       <SelectItem value="SECRETARY_GENERAL">Secretary General</SelectItem>
                       <SelectItem value="AUDITOR">Auditor</SelectItem>
+                      <SelectItem value="ASSISTANT_PRESIDENT">Assistant President</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -207,7 +213,7 @@ export default function MemberDirectory() {
           />
         </div>
         <Button variant="outline" className="gap-2 border-slate-100 h-12 rounded-2xl font-bold bg-white text-slate-600">
-          <Filter className="w-5 h-5" /> Advanced Search
+          <Filter className="w-5 h-5" /> Filter Results
         </Button>
       </div>
 
@@ -216,7 +222,7 @@ export default function MemberDirectory() {
           {loading ? (
             <div className="flex flex-col items-center justify-center py-24 space-y-4">
               <Loader2 className="w-10 h-10 animate-spin text-emerald-600" />
-              <p className="text-sm font-bold text-slate-500 animate-pulse">Reconciling society records...</p>
+              <p className="text-sm font-bold text-slate-500 animate-pulse">Synchronizing society records...</p>
             </div>
           ) : (
             <Table>
@@ -224,10 +230,10 @@ export default function MemberDirectory() {
                 <TableRow className="border-slate-100 hover:bg-transparent">
                   <TableHead className="w-[300px] font-bold text-slate-900">Member</TableHead>
                   <TableHead className="font-bold text-slate-900">Society ID</TableHead>
-                  <TableHead className="font-bold text-slate-900">Governance Role</TableHead>
-                  <TableHead className="font-bold text-slate-900">Join Date</TableHead>
+                  <TableHead className="font-bold text-slate-900">Role</TableHead>
+                  <TableHead className="font-bold text-slate-900">Joined</TableHead>
                   <TableHead className="font-bold text-slate-900">Standing</TableHead>
-                  <TableHead className="text-right font-bold text-slate-900">Governance Actions</TableHead>
+                  <TableHead className="text-right font-bold text-slate-900">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -235,10 +241,10 @@ export default function MemberDirectory() {
                   <TableRow key={member.id} className="border-slate-100 hover:bg-emerald-50/30 transition-colors">
                     <TableCell>
                       <div className="flex items-center gap-4">
-                        <Avatar className="h-10 w-10 border border-slate-100 shadow-sm">
-                          <AvatarImage src={`https://picsum.photos/seed/${member.id}/200/200`} />
-                          <AvatarFallback className="bg-emerald-50 text-emerald-700 font-bold">{member.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                        </Avatar>
+                        <UIAvatar className="h-10 w-10 border border-slate-100 shadow-sm">
+                          <UIAvatarImage src={`https://picsum.photos/seed/${member.id}/200/200`} />
+                          <UIAvatarFallback className="bg-emerald-50 text-emerald-700 font-bold">{member.name?.substring(0, 2).toUpperCase()}</UIAvatarFallback>
+                        </UIAvatar>
                         <div>
                           <p className="text-sm font-black text-slate-900">{member.name}</p>
                           <p className="text-[10px] font-bold text-slate-500 tracking-tight">{member.email}</p>
@@ -247,14 +253,14 @@ export default function MemberDirectory() {
                     </TableCell>
                     <TableCell className="font-mono text-xs font-bold text-emerald-600">{member.memberId}</TableCell>
                     <TableCell>
-                      <Badge variant="outline" className="bg-primary/5 text-primary border-primary/20 text-[10px] font-black uppercase tracking-widest px-3">
+                      <Badge variant="outline" className="bg-emerald-50 text-emerald-700 border-emerald-100 text-[10px] font-black uppercase tracking-widest px-3">
                         {member.role?.replace('_', ' ')}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-sm font-medium text-slate-600">{member.joinDate}</TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <div className={`w-2 h-2 rounded-full ${member.status === 'Active' ? 'bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'bg-orange-400 shadow-[0_0_8px_rgba(251,146,60,0.5)]'}`} />
+                        <div className={`w-2 h-2 rounded-full ${member.status === 'Active' ? 'bg-emerald-500' : 'bg-orange-400'}`} />
                         <span className="text-xs font-bold text-slate-700">{member.status}</span>
                       </div>
                     </TableCell>
@@ -283,7 +289,7 @@ export default function MemberDirectory() {
                             setIsViewModalOpen(true);
                           }}
                         >
-                          Details
+                          View Profile
                         </Button>
                       </div>
                     </TableCell>
@@ -299,7 +305,7 @@ export default function MemberDirectory() {
       <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
         <DialogContent className="sm:max-w-[450px] rounded-[2.5rem] border-slate-100 bg-white shadow-2xl p-8">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-black text-slate-900">Modify Member Record</DialogTitle>
+            <DialogTitle className="text-2xl font-black text-slate-900">Modify Registry File</DialogTitle>
             <DialogDescription>Update society standing and governance permissions.</DialogDescription>
           </DialogHeader>
           <div className="grid gap-6 py-6">
@@ -312,7 +318,7 @@ export default function MemberDirectory() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="font-bold ml-1 text-slate-700">Governance Role</Label>
+              <Label className="font-bold ml-1 text-slate-700">Society Role</Label>
               <Select onValueChange={(val) => setEditForm({...editForm, role: val as UserRole})} value={editForm.role}>
                 <SelectTrigger className="h-12 bg-slate-50 border-slate-100 rounded-xl">
                   <SelectValue />
@@ -322,12 +328,13 @@ export default function MemberDirectory() {
                   <SelectItem value="TREASURER">Treasurer</SelectItem>
                   <SelectItem value="SECRETARY_GENERAL">Secretary General</SelectItem>
                   <SelectItem value="AUDITOR">Auditor</SelectItem>
+                  <SelectItem value="ASSISTANT_PRESIDENT">Assistant President</SelectItem>
                   <SelectItem value="PRESIDENT">President</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="font-bold ml-1 text-slate-700">Society Standing</Label>
+              <Label className="font-bold ml-1 text-slate-700">System Status</Label>
               <Select onValueChange={(val) => setEditForm({...editForm, status: val as any})} value={editForm.status}>
                 <SelectTrigger className="h-12 bg-slate-50 border-slate-100 rounded-xl">
                   <SelectValue />
@@ -342,7 +349,7 @@ export default function MemberDirectory() {
           </div>
           <DialogFooter>
             <Button onClick={handleUpdateMember} disabled={isUpdating} className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-lg">
-              {isUpdating ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Synchronize Changes'}
+              {isUpdating ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Apply Registry Changes'}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -355,10 +362,10 @@ export default function MemberDirectory() {
             <div>
               <div className="bg-emerald-600 p-10 text-white">
                 <div className="flex items-center gap-6">
-                  <Avatar className="h-24 w-24 border-4 border-white/20 shadow-2xl">
-                    <AvatarImage src={`https://picsum.photos/seed/${selectedMember.id}/200/200`} />
-                    <AvatarFallback className="text-3xl font-black bg-white/20">{selectedMember.name.substring(0, 2).toUpperCase()}</AvatarFallback>
-                  </Avatar>
+                  <UIAvatar className="h-24 w-24 border-4 border-white/20 shadow-2xl">
+                    <UIAvatarImage src={`https://picsum.photos/seed/${selectedMember.id}/200/200`} />
+                    <UIAvatarFallback className="text-3xl font-black bg-white/20">{selectedMember.name?.substring(0, 2).toUpperCase()}</UIAvatarFallback>
+                  </UIAvatar>
                   <div className="space-y-1">
                     <h2 className="text-3xl font-black tracking-tight">{selectedMember.name}</h2>
                     <p className="text-emerald-50 font-bold uppercase tracking-widest text-[10px]">{selectedMember.role?.replace('_', ' ')}</p>
@@ -372,7 +379,7 @@ export default function MemberDirectory() {
                     <p className="text-lg font-black text-slate-900">{selectedMember.memberId}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Total Savings</p>
+                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Savings Pool</p>
                     <p className="text-lg font-black text-emerald-600">₦{(selectedMember.totalSavings || 0).toLocaleString()}</p>
                   </div>
                   <div className="space-y-1">
@@ -380,7 +387,7 @@ export default function MemberDirectory() {
                     <p className="text-sm font-bold text-slate-700">{selectedMember.joinDate}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">System Status</p>
+                    <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Standing</p>
                     <Badge className={selectedMember.status === 'Active' ? 'bg-emerald-100 text-emerald-700' : 'bg-orange-100 text-orange-700'}>
                       {selectedMember.status}
                     </Badge>

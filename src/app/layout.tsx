@@ -29,14 +29,14 @@ export default function RootLayout({
               if (!msg) return false;
               const s = typeof msg === 'string' ? msg : (msg.message || JSON.stringify(msg));
               const l = s.toLowerCase();
-              return l.includes('internal assertion failed') || 
+              return l.includes('internal unhandled error') || 
+                     l.includes('internal assertion failed') || 
+                     l.includes('unexpected state') ||
                      l.includes('id: ca9') || 
                      l.includes('id: b815') ||
-                     l.includes('internal unhandled error') ||
-                     l.includes('unexpected state') ||
-                     l.includes('firestore (11.9.0)') ||
                      l.includes('notallowederror') ||
-                     l.includes('clipboard');
+                     l.includes('clipboard') ||
+                     l.includes('firestore (11.9.0)');
             };
 
             console.error = function(...args) {

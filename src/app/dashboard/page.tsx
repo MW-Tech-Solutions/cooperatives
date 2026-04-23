@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useEffect, useState } from 'react';
@@ -14,7 +13,8 @@ import {
   Calendar,
   Wallet,
   TrendingUp,
-  Scale
+  Scale,
+  Users
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useFirestore, useDoc, useCollection, useMemoFirebase, useUser } from '@/firebase';
@@ -60,7 +60,8 @@ export default function DashboardOverview() {
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      setRole(localStorage.getItem('coopnest_role') as UserRole || 'MEMBER');
+      const storedRole = localStorage.getItem('coopnest_role') as UserRole;
+      setRole(storedRole || 'MEMBER');
     }
   }, []);
 
@@ -90,7 +91,7 @@ export default function DashboardOverview() {
 
         updateDoc(loanRef, updateData)
           .then(() => {
-            toast({ title: "Guarantors Notified", description: `Notifications sent for ${loan.memberName}'s loan application.` });
+            toast({ title: "Guarantors Notified", description: `Authorizations sent for ${loan.memberName}'s loan application.` });
           })
           .catch(async (e) => {
             errorEmitter.emit('permission-error', new FirestorePermissionError({
@@ -131,9 +132,8 @@ export default function DashboardOverview() {
         <div className="absolute right-12 bottom-0 w-1/3 h-full hidden lg:block opacity-90">
           <img 
             src="https://picsum.photos/seed/coophero/600/400" 
-            alt="Hero" 
+            alt="Society Impact" 
             className="w-full h-full object-cover rounded-t-3xl border-x-8 border-t-8 border-white/10"
-            data-ai-hint="cooperative community" 
           />
         </div>
         <Scale className="absolute top-10 left-1/2 opacity-10 w-24 h-24" />
@@ -147,12 +147,12 @@ export default function DashboardOverview() {
         className="flex flex-col sm:flex-row items-center justify-between p-6 bg-emerald-50/30 border-2 border-emerald-100 rounded-3xl"
       >
         <div className="flex flex-wrap items-center gap-2 mb-4 sm:mb-0">
-          <h2 className="font-extrabold text-lg text-slate-800">Society Standing</h2>
-          <span className="text-emerald-600 font-black text-sm">Registry ID: {userProfile?.memberId || 'MB-0000'}</span>
-          <span className="text-slate-500 text-sm font-medium">| Member Status: {userProfile?.status || 'Active'}</span>
+          <h2 className="font-extrabold text-lg text-slate-800">Registry Standing</h2>
+          <span className="text-emerald-600 font-black text-sm">ID: {userProfile?.memberId || 'MB-0000'}</span>
+          <span className="text-slate-500 text-sm font-medium">| Status: {userProfile?.status || 'Active'}</span>
         </div>
-        <Button variant="outline" className="rounded-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-500 hover:text-white bg-white px-8 h-12 text-base font-bold transition-all">
-          <ChevronDown className="w-5 h-5" /> Society Bylaws
+        <Button variant="outline" className="rounded-full gap-2 border-emerald-500 text-emerald-700 hover:bg-emerald-600 hover:text-white bg-white px-8 h-12 text-base font-bold transition-all">
+          <FileText className="w-5 h-5" /> Society Bylaws
         </Button>
       </motion.div>
 
@@ -163,25 +163,25 @@ export default function DashboardOverview() {
         className="grid grid-cols-1 md:grid-cols-2 gap-8"
       >
         <StatCard 
-          title="Mutual Savings" 
+          title="Personal Pool" 
           value={`₦${(userProfile?.totalSavings || 0).toLocaleString()}`} 
-          subtitle="Collective Asset Pool"
+          subtitle="Collective Asset Contribution"
           icon={Wallet} 
-          className="bg-emerald-500 text-white" 
+          className="bg-emerald-600 text-white" 
           showBadge
         />
         <StatCard 
-          title="Credit Eligibility" 
+          title="Credit Status" 
           value="3x Multiplier" 
-          subtitle="Based on Contribution Tenure"
+          subtitle="Qualified Financial Leverage"
           icon={TrendingUp} 
-          className="bg-slate-800 text-white" 
+          className="bg-slate-900 text-white" 
           watermark={TrendingUp}
         />
         <StatCard 
           title="Dividend Forecast" 
-          value="₦0.00" 
-          subtitle="Estimated Surplus Distribution"
+          value="Calculated Annually" 
+          subtitle="Pro-rata Surplus Distribution"
           icon={CheckCircle2} 
           className="bg-orange-500 text-white md:col-span-2" 
         />
@@ -191,25 +191,25 @@ export default function DashboardOverview() {
         <Card className="rounded-[2.5rem] border-none bg-white shadow-xl shadow-slate-200/50 overflow-hidden">
           <CardHeader className="p-8 pb-4">
             <CardTitle className="text-2xl font-black text-slate-900">Governance Workflow</CardTitle>
-            <CardDescription className="text-base">Review and authorize guarantor notifications for pending credit requests.</CardDescription>
+            <CardDescription className="text-base">Review and authorize guarantor notifications for credit applications.</CardDescription>
           </CardHeader>
           <CardContent className="p-8 space-y-4">
             {pendingNotifications.map((loan) => (
               <div key={loan.id} className="flex items-center justify-between p-6 bg-slate-50 rounded-3xl border border-slate-100 hover:border-emerald-200 transition-all">
                 <div className="flex items-center gap-6">
                   <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
-                    <FileText className="w-7 h-7" />
+                    <Users className="w-7 h-7" />
                   </div>
                   <div>
                     <p className="font-black text-xl text-slate-900">{loan.memberName}</p>
-                    <p className="text-slate-500 font-medium">₦{loan.amount.toLocaleString()} Credit Application</p>
+                    <p className="text-slate-500 font-medium">₦{loan.amount.toLocaleString()} Asset Financing Request</p>
                   </div>
                 </div>
                 <Button 
                   size="lg"
                   disabled={processingId === loan.id}
                   onClick={() => handleApproveNotification(loan)}
-                  className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black px-8 h-14 shadow-lg shadow-emerald-100"
+                  className="rounded-full bg-emerald-600 hover:bg-emerald-700 text-white font-black px-8 h-14 shadow-lg"
                 >
                   {processingId === loan.id ? <Loader2 className="w-6 h-6 animate-spin" /> : 'Notify Guarantors'}
                 </Button>
