@@ -1,3 +1,4 @@
+
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -164,7 +165,7 @@ export default function Home() {
                     Start Saving Now <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-200 bg-white/40 backdrop-blur-sm text-emerald-700 transition-all shadow-lg">
+                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-emerald-600 bg-white/40 backdrop-blur-sm text-emerald-700 transition-all shadow-lg hover:bg-emerald-50">
                   <Link href="/login">Portal Login</Link>
                 </Button>
               </motion.div>
