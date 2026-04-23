@@ -129,7 +129,7 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-20 relative z-10">
-        <section className="w-full py-24 md:py-40 flex items-center justify-center">
+        <section className="w-full py-12 md:py-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
               <motion.div 
@@ -146,7 +146,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-8"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl max-w-[1000px] text-slate-900 leading-tight">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl max-w-[1000px] text-slate-900 leading-tight">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-600 font-medium md:text-xl lg:text-2xl leading-relaxed">
