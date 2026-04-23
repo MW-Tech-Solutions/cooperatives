@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -9,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Search, UserPlus, Filter, Loader2, CheckCircle2, User as UserIcon, Mail, Shield, Calendar, CreditCard, Edit3 } from 'lucide-react';
+import { Search, UserPlus, Filter, Loader2, Edit3, User as UserIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { User, UserRole } from '@/lib/types';
 import { useToast } from '@/hooks/use-toast';
@@ -25,18 +24,23 @@ export default function MemberDirectory() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<User | null>(null);
+  
   const [newMember, setNewMember] = useState<Partial<User>>({
     name: '',
     email: '',
     role: 'MEMBER',
     status: 'Active'
   });
-  const [editForm, setEditForm] = useState<Partial<User>>({});
+
+  const [editForm, setEditForm] = useState<Partial<User>>({
+    name: '',
+    role: 'MEMBER',
+    status: 'Active'
+  });
 
   const db = useFirestore();
   const { toast } = useToast();
   const [isAdmin, setIsAdmin] = useState(false);
-  const [processingId, setProcessingId] = useState<string | null>(null);
   const [isAdding, setIsAdding] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
@@ -183,7 +187,7 @@ export default function MemberDirectory() {
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleAddMember} disabled={isAdding} className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-lg shadow-emerald-100">
+                <Button onClick={handleAddMember} disabled={isAdding} className="w-full h-14 bg-emerald-600 hover:bg-emerald-700 text-white font-black rounded-2xl shadow-lg">
                   {isAdding ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Confirm Registration'}
                 </Button>
               </DialogFooter>
