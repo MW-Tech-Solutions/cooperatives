@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { UserRole, SystemSettings } from '@/lib/types';
 import { DashboardSidebar } from '@/components/dashboard/Sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bell, Mail, Sparkles, Menu, LogOut, Loader2, ChevronRight, LayoutDashboard, Wallet, Users, CreditCard, Search, ShieldAlert, Settings, ShieldCheck } from 'lucide-react';
+import { Bell, Mail, Menu, LogOut, ChevronRight, LayoutDashboard, Wallet, Users, CreditCard, Search, ShieldAlert, Settings, ShieldCheck } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase, useAuth, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
@@ -50,9 +50,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.push('/login');
   };
 
-  const defaultLogo = PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || null;
   const systemName = settings?.branding?.systemName || 'CoopNest';
-  const logoUrl = settings?.branding?.logoUrl || defaultLogo;
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || null;
 
   if (authLoading || (user && !role)) {
     return (

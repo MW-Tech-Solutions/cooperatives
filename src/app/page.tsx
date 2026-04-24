@@ -8,7 +8,6 @@ import {
   ShieldCheck, 
   TrendingUp, 
   Users, 
-  Heart, 
   ChevronRight, 
   Menu, 
   Sparkles,
@@ -16,17 +15,13 @@ import {
   ShieldAlert,
   CircleHelp,
   Plus,
-  Coins,
-  Scale,
   Building2,
   FileCheck2,
   Lock,
   Globe,
   Award,
-  X,
   PiggyBank,
-  Stethoscope,
-  Briefcase
+  Stethoscope
 } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -155,13 +150,13 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-0 relative z-10">
-        <section className="w-full pt-24 pb-12 md:pt-32 md:pb-16 flex items-center justify-center">
+        <section className="w-full pt-16 pb-12 md:pt-24 md:pb-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-8 text-center">
+            <div className="flex flex-col items-center space-y-4 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-12"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-12"
               >
                 <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -170,12 +165,12 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="space-y-12"
+                className="space-y-6 md:space-y-12 pt-4 md:pt-8"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.05]">
+                <h1 className="text-3xl font-headline font-black tracking-tighter sm:text-5xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.1] md:leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
-                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
+                <p className="mx-auto max-w-[800px] text-slate-700 font-bold text-sm md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm px-4">
                   Experience the power of mutual aid. We leverage collective savings to provide members with bank-grade financial security, affordable credit, and shared annual dividends.
                 </p>
               </motion.div>
@@ -184,14 +179,14 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-4"
+                className="flex flex-col sm:flex-row gap-4 md:gap-6 w-full max-w-lg justify-center pt-8 md:pt-12"
               >
-                <Button asChild size="lg" className="h-16 px-12 text-lg font-black rounded-2xl bg-emerald-600 shadow-2xl shadow-emerald-200/50 hover:scale-[1.03] active:scale-[0.97] transition-all group">
+                <Button asChild size="lg" className="h-14 md:h-16 px-12 text-base md:text-lg font-black rounded-2xl bg-emerald-600 shadow-2xl shadow-emerald-200/50 hover:scale-[1.03] active:scale-[0.97] transition-all group">
                   <Link href="/register" className="flex items-center gap-2">
                     Start Saving Now <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-16 px-12 text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-emerald-950/20 backdrop-blur-sm transition-all">
+                <Button asChild variant="outline" size="lg" className="h-14 md:h-16 px-12 text-base md:text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-emerald-950/20 backdrop-blur-sm transition-all">
                   <Link href="/login">Portal Login</Link>
                 </Button>
               </motion.div>
@@ -209,27 +204,27 @@ export default function Home() {
                 { label: 'Last Dividend', value: '14.2%' },
               ].map((stat, i) => (
                 <div key={i} className="space-y-2">
-                  <h3 className="text-4xl md:text-5xl font-black font-headline text-emerald-400">{stat.value}</h3>
-                  <p className="text-emerald-100/70 font-bold uppercase tracking-widest text-xs">{stat.label}</p>
+                  <h3 className="text-3xl md:text-5xl font-black font-headline text-emerald-400">{stat.value}</h3>
+                  <p className="text-emerald-100/70 font-bold uppercase tracking-widest text-[10px] md:text-xs">{stat.label}</p>
                 </div>
               ))}
             </div>
           </div>
         </section>
 
-        <section id="products" className="w-full py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-t border-emerald-100">
+        <section id="products" className="w-full py-24 md:py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-t border-emerald-100">
           <div className="container px-4 md:px-6">
-            <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
+            <div className="text-center max-w-3xl mx-auto mb-16 md:mb-20 space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em]">
                 Member Services
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
                 Financial Solutions for <span className="text-emerald-600">Every Stage</span>
               </h2>
-              <p className="text-lg text-slate-600 font-medium">Our products are designed to support your personal and professional milestones through ethical financial engineering.</p>
+              <p className="text-base md:text-lg text-slate-600 font-medium">Our products are designed to support your personal and professional milestones through ethical financial engineering.</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
               {[
                 { 
                   title: 'Thrift Savings', 
@@ -279,18 +274,18 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="governance" className="w-full py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border-y border-emerald-100">
+        <section id="governance" className="w-full py-24 md:py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border-y border-emerald-100">
           <div className="container px-4 md:px-6 relative z-10">
-            <div className="flex flex-col lg:flex-row gap-20 items-center">
+            <div className="flex flex-col lg:flex-row gap-16 md:gap-20 items-center">
               <div className="flex-1 space-y-10">
                 <div className="space-y-6">
                   <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm">
                     Governance Model
                   </div>
-                  <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+                  <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
                     Transparency as our <br /><span className="text-emerald-600">Core Mandate</span>
                   </h2>
-                  <p className="text-lg text-slate-600 font-medium leading-relaxed">
+                  <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed">
                     Our society is governed by strict cooperative principles ensuring every member's voice is heard and every kobo is accounted for through immutable digital auditing.
                   </p>
                 </div>
@@ -317,14 +312,10 @@ export default function Home() {
               <div className="flex-1 relative">
                 <div className="relative z-10 rounded-[3rem] overflow-hidden shadow-2xl shadow-emerald-200 border-8 border-white">
                   <img src={governanceImg} alt="Governance Meeting" className="w-full h-auto" />
-                  <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
+                  <div className="absolute bottom-6 md:bottom-10 left-6 md:left-10 right-6 md:right-10 p-6 md:p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
-                         {logoUrl ? (
-                           <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
-                         ) : (
-                           <Lock className="w-7 h-7 text-white" />
-                         )}
+                         <Lock className="w-7 h-7 text-white" />
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>
@@ -336,60 +327,60 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-b border-emerald-100">
+        <section className="w-full py-24 md:py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-b border-emerald-100">
           <div className="container px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div className="order-2 md:order-1">
                 <div className="grid grid-cols-2 gap-6">
                   <div className="space-y-6">
-                    <div className="p-8 rounded-[2rem] bg-emerald-600 text-white shadow-xl shadow-emerald-200">
-                      <Globe className="w-8 h-8 mb-6 opacity-80" />
-                      <h4 className="text-xl font-black mb-2">Member Community</h4>
-                      <p className="text-xs font-medium opacity-80">Connecting individuals across diverse professional sectors.</p>
+                    <div className="p-6 md:p-8 rounded-[2rem] bg-emerald-600 text-white shadow-xl shadow-emerald-200">
+                      <Globe className="w-6 md:w-8 h-6 md:h-8 mb-4 md:mb-6 opacity-80" />
+                      <h4 className="text-lg md:text-xl font-black mb-2">Member Community</h4>
+                      <p className="text-[10px] md:text-xs font-medium opacity-80">Connecting individuals across diverse professional sectors.</p>
                     </div>
-                    <div className="p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
-                      <Target className="w-8 h-8 text-emerald-600 mb-6" />
-                      <h4 className="text-xl font-black mb-2">Social Impact</h4>
-                      <p className="text-xs font-medium text-slate-500">Funding community projects and educational scholarships.</p>
+                    <div className="p-6 md:p-8 rounded-[2rem] bg-slate-50 border border-slate-100">
+                      <Target className="w-6 md:w-8 h-6 md:h-8 text-emerald-600 mb-4 md:mb-6" />
+                      <h4 className="text-lg md:text-xl font-black mb-2">Social Impact</h4>
+                      <p className="text-[10px] md:text-xs font-medium text-slate-500">Funding community projects and educational scholarships.</p>
                     </div>
                   </div>
                   <div className="space-y-6">
-                    <div className="p-8 rounded-[2rem] bg-orange-500 text-white shadow-xl shadow-orange-200">
-                      <TrendingUp className="w-8 h-8 mb-6 opacity-80" />
-                      <h4 className="text-xl font-black mb-2">Sustainable ROI</h4>
-                      <p className="text-xs font-medium opacity-80">Consistent returns through ethical fund diversification.</p>
+                    <div className="p-6 md:p-8 rounded-[2rem] bg-orange-500 text-white shadow-xl shadow-orange-200">
+                      <TrendingUp className="w-6 md:w-8 h-6 md:h-8 mb-4 md:mb-6 opacity-80" />
+                      <h4 className="text-lg md:text-xl font-black mb-2">Sustainable ROI</h4>
+                      <p className="text-[10px] md:text-xs font-medium opacity-80">Consistent returns through ethical fund diversification.</p>
                     </div>
-                    <div className="p-8 rounded-[2rem] bg-emerald-50 border border-emerald-100">
-                      <Users className="w-8 h-8 text-emerald-600 mb-6" />
-                      <h4 className="text-xl font-black mb-2">AGM Hub</h4>
-                      <p className="text-xs font-medium text-slate-500">A dedicated space for democratic deliberation and voting.</p>
+                    <div className="p-6 md:p-8 rounded-[2rem] bg-emerald-50 border border-emerald-100">
+                      <Users className="w-6 md:w-8 h-6 md:h-8 text-emerald-600 mb-4 md:mb-6" />
+                      <h4 className="text-lg md:text-xl font-black mb-2">AGM Hub</h4>
+                      <p className="text-[10px] md:text-xs font-medium text-slate-500">A dedicated space for democratic deliberation and voting.</p>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="order-1 md:order-2 space-y-8">
+              <div className="order-1 md:order-2 space-y-6 md:space-y-8">
                 <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em]">
                   The Cooperative Edge
                 </div>
-                <h2 className="text-4xl md:text-5xl font-black text-slate-900 leading-tight">
+                <h2 className="text-3xl md:text-5xl font-black text-slate-900 leading-tight">
                   More than just a <br /><span className="text-emerald-600">Financial Pool</span>
                 </h2>
-                <p className="text-lg text-slate-600 font-medium leading-relaxed">
+                <p className="text-base md:text-lg text-slate-600 font-medium leading-relaxed">
                   We are a social enterprise built on the belief that economic freedom is best achieved through shared commitment and mutual support. Our digital hub brings together modern technology and age-old cooperative values.
                 </p>
-                <div className="flex flex-wrap gap-4 pt-4">
-                  <div className="px-6 py-3 rounded-2xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">Financial Literacy Training</div>
-                  <div className="px-6 py-3 rounded-2xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">Welfare Support Schemes</div>
-                  <div className="px-6 py-3 rounded-2xl bg-slate-100 border border-slate-200 text-xs font-bold text-slate-700">Investment Cooperatives</div>
+                <div className="flex flex-wrap gap-3 md:gap-4 pt-4">
+                  <div className="px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-slate-100 border border-slate-200 text-[10px] md:text-xs font-bold text-slate-700">Financial Literacy Training</div>
+                  <div className="px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-slate-100 border border-slate-200 text-[10px] md:text-xs font-bold text-slate-700">Welfare Support Schemes</div>
+                  <div className="px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-slate-100 border border-slate-200 text-[10px] md:text-xs font-bold text-slate-700">Investment Cooperatives</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="w-full py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center">
+        <section className="w-full py-24 md:py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center">
           <div className="container px-4 md:px-6 max-w-4xl">
-            <div className="flex flex-col items-center text-center gap-4 mb-16">
+            <div className="flex flex-col items-center text-center gap-4 mb-12 md:mb-16">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center overflow-hidden p-2">
                  {logoUrl ? (
                    <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
@@ -397,8 +388,8 @@ export default function Home() {
                    <CircleHelp className="w-7 h-7 text-emerald-600" />
                  )}
               </div>
-              <h2 className="text-4xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
-              <p className="text-slate-500 font-medium">Everything you need to know about joining and flourishing in our society.</p>
+              <h2 className="text-3xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
+              <p className="text-sm md:text-base text-slate-500 font-medium">Everything you need to know about joining and flourishing in our society.</p>
             </div>
             <Accordion type="single" collapsible className="w-full space-y-4">
               {[
@@ -423,14 +414,14 @@ export default function Home() {
                   a: "Yes. Our society is registered with relevant authorities and operates under strict financial oversight. All funds are managed through bank-grade security protocols."
                 }
               ].map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="border border-slate-200 bg-white rounded-2xl px-8 overflow-hidden">
-                  <AccordionTrigger className="text-lg font-bold text-slate-800 hover:text-emerald-600 hover:no-underline py-6">
+                <AccordionItem key={i} value={`faq-${i}`} className="border border-slate-200 bg-white rounded-2xl px-6 md:px-8 overflow-hidden">
+                  <AccordionTrigger className="text-base md:text-lg font-bold text-slate-800 hover:text-emerald-600 hover:no-underline py-4 md:py-6">
                     <div className="flex items-center gap-3">
                       <CircleHelp className="w-5 h-5 text-emerald-600 shrink-0" />
                       {faq.q}
                     </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-slate-500 font-medium leading-relaxed pb-8 pt-2 pl-8">
+                  <AccordionContent className="text-sm md:text-base text-slate-500 font-medium leading-relaxed pb-6 md:pb-8 pt-2 pl-8">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -441,21 +432,21 @@ export default function Home() {
 
         <section className="w-full py-24 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="bg-emerald-600/95 backdrop-blur-lg rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
+            <div className="bg-emerald-600/95 backdrop-blur-lg rounded-[2rem] md:rounded-[3rem] p-8 md:p-24 text-white text-center space-y-8 md:space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
               <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
-                <Sparkles className="w-[400px] h-[400px]" />
+                <Sparkles className="w-[300px] md:w-[400px] h-[300px] md:h-[400px]" />
               </div>
               <div className="space-y-4 relative z-10">
-                <h2 className="text-4xl md:text-6xl font-black font-headline tracking-tighter">Join the Movement</h2>
-                <p className="max-w-2xl mx-auto text-emerald-50 text-lg md:text-xl font-medium">
+                <h2 className="text-3xl md:text-6xl font-black font-headline tracking-tighter">Join the Movement</h2>
+                <p className="max-w-2xl mx-auto text-emerald-50 text-base md:text-xl font-medium">
                   Thousands of members have already secured their financial future. Join us today and let's grow together.
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-6 justify-center relative z-10">
-                <Button asChild size="lg" className="h-16 px-16 text-lg font-black rounded-2xl bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl transition-all hover:scale-105 active:scale-95">
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center relative z-10">
+                <Button asChild size="lg" className="h-14 md:h-16 px-12 md:px-16 text-base md:text-lg font-black rounded-2xl bg-white text-emerald-700 hover:bg-emerald-50 shadow-2xl transition-all hover:scale-105 active:scale-95">
                   <Link href="/register">Sign Up in 5 Minutes</Link>
                 </Button>
-                <Button asChild variant="outline" size="lg" className="h-16 px-16 text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-transparent transition-all">
+                <Button asChild variant="outline" size="lg" className="h-14 md:h-16 px-12 md:px-16 text-base md:text-lg font-bold rounded-2xl border-white text-white hover:bg-white hover:text-emerald-700 bg-transparent transition-all">
                   <Link href="/login">Access Portal</Link>
                 </Button>
               </div>
@@ -464,9 +455,9 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/95 backdrop-blur-md">
+      <footer className="py-16 md:py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/95 backdrop-blur-md">
         <div className="container mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-20">
             <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center gap-3">
                  <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 overflow-hidden">
@@ -476,49 +467,49 @@ export default function Home() {
                       <ShieldCheck className="w-8 h-8 text-white" />
                     )}
                  </div>
-                 <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
+                 <span className="font-headline font-black text-2xl md:text-3xl text-emerald-950">{systemName}</span>
               </div>
-              <p className="text-base text-slate-600 font-bold leading-relaxed max-sm sm:max-w-sm">
+              <p className="text-sm md:text-base text-slate-600 font-bold leading-relaxed max-sm sm:max-w-sm">
                 A democratically governed financial ecosystem dedicated to the economic empowerment and mutual prosperity of its members through collective strength and ethical management.
               </p>
               <div className="flex gap-4">
-                 <div className="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
-                   <Users className="w-6 h-6" />
+                 <div className="w-10 md:w-12 h-10 md:h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
+                   <Users className="w-5 md:w-6 h-5 md:h-6" />
                  </div>
-                 <div className="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
-                   <TrendingUp className="w-6 h-6" />
+                 <div className="w-10 md:w-12 h-10 md:h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
+                   <TrendingUp className="w-5 md:w-6 h-5 md:h-6" />
                  </div>
-                 <div className="w-12 h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
-                   <ShieldAlert className="w-6 h-6" />
+                 <div className="w-10 md:w-12 h-10 md:h-12 bg-white border border-slate-200 rounded-2xl flex items-center justify-center text-slate-400 hover:text-emerald-600 transition-all cursor-pointer hover:shadow-lg">
+                   <ShieldAlert className="w-5 md:w-6 h-5 md:h-6" />
                  </div>
               </div>
             </div>
             
-            <div className="space-y-8">
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Member Links</h4>
-              <ul className="space-y-4">
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Society Bylaws</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Loan Application Guide</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Audit Reports 2024</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Annual Meeting Minutes</Link></li>
+            <div className="space-y-6 md:space-y-8">
+              <h4 className="text-[10px] md:text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Member Links</h4>
+              <ul className="space-y-3 md:space-y-4">
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Society Bylaws</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Loan Application Guide</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Audit Reports 2024</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Annual Meeting Minutes</Link></li>
               </ul>
             </div>
 
-            <div className="space-y-8">
-              <h4 className="text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Governance</h4>
-              <ul className="space-y-4">
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Board of Directors</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Elections 2025</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Privacy & Data Security</Link></li>
-                <li><Link href="#" className="text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Terms of Membership</Link></li>
+            <div className="space-y-6 md:space-y-8">
+              <h4 className="text-[10px] md:text-xs font-black text-slate-900 uppercase tracking-[0.2em]">Governance</h4>
+              <ul className="space-y-3 md:space-y-4">
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Board of Directors</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Elections 2025</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Privacy & Data Security</Link></li>
+                <li><Link href="#" className="text-xs md:text-sm font-bold text-slate-500 hover:text-emerald-600 transition-colors">Terms of Membership</Link></li>
               </ul>
             </div>
           </div>
-          <div className="mt-24 pt-8 border-t border-emerald-100/50 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <p className="text-xs font-bold text-slate-400 uppercase tracking-widest">© 2025 {systemName}. Mutual Prosperity Guaranteed.</p>
-            <div className="flex items-center gap-8">
-               <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Registered Cooperative</span>
-               <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">FSA Compliant</span>
+          <div className="mt-16 md:mt-24 pt-8 border-t border-emerald-100/50 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <p className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest text-center">© 2025 {systemName}. Mutual Prosperity Guaranteed.</p>
+            <div className="flex items-center gap-6 md:gap-8">
+               <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Registered Cooperative</span>
+               <span className="text-[8px] md:text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">FSA Compliant</span>
             </div>
           </div>
         </div>

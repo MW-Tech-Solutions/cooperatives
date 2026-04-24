@@ -24,9 +24,7 @@ import {
   Palette,
   ShieldCheck,
   Upload,
-  Image as ImageIcon,
-  Key,
-  CircleHelp
+  Key
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SystemSettings, LoanType } from '@/lib/types';
@@ -68,7 +66,7 @@ export default function CommandCenter() {
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    if (!file || !db || !settingsRef) return;
 
     setUploadingLogo(true);
     const formData = new FormData();
@@ -77,11 +75,21 @@ export default function CommandCenter() {
     try {
       const res = await uploadLogo(formData);
       if (res.success) {
+        // Update local state
+        const newLogoUrl = res.url!;
         setForm(prev => ({
           ...prev,
-          branding: { ...prev.branding!, logoUrl: res.url! }
+          branding: { ...prev.branding!, logoUrl: newLogoUrl }
         }));
-        toast({ title: "Logo Uploaded", description: "The new logo has been saved to the server." });
+        
+        // Save immediately to Firestore to ensure global updates
+        await setDoc(settingsRef, {
+          branding: { ...form.branding, logoUrl: newLogoUrl },
+          updatedAt: serverTimestamp()
+        }, { merge: true });
+
+        toast({ title: "Branding Updated", description: "The new logo is now active across the entire system." });
+        logAudit('Logo Modified', 'System Branding');
       } else {
         toast({ variant: "destructive", title: "Upload Failed", description: res.error });
       }
@@ -163,7 +171,7 @@ export default function CommandCenter() {
         </Button>
       </div>
 
-      <Tabs defaultValue="financials" className="space-y-6">
+      <Tabs defaultValue="branding" className="space-y-6">
         <TabsList className="bg-slate-100/80 p-1 flex-wrap h-auto rounded-3xl border border-slate-200">
           <TabsTrigger value="branding" className="gap-2 rounded-2xl data-[state=active]:bg-white data-[state=active]:text-emerald-600"><Palette className="w-4 h-4" /> Branding</TabsTrigger>
           <TabsTrigger value="financials" className="gap-2 rounded-2xl data-[state=active]:bg-white data-[state=active]:text-emerald-600"><Calculator className="w-4 h-4" /> Financials</TabsTrigger>
