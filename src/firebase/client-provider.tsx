@@ -3,7 +3,7 @@
 
 import React, { useMemo } from 'react';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
-import { getFirestore, Firestore, terminate } from 'firebase/firestore';
+import { initializeFirestore, Firestore, terminate } from 'firebase/firestore';
 import { getAuth, Auth } from 'firebase/auth';
 import { firebaseConfig } from './config';
 import { FirebaseProvider } from './provider';
@@ -26,7 +26,10 @@ function getFirebaseInstance() {
     try {
       const apps = getApps();
       window.__FIREBASE_APP__ = apps.length === 0 ? initializeApp(firebaseConfig) : getApp();
-      window.__FIREBASE_DB__ = getFirestore(window.__FIREBASE_APP__);
+      // Use experimentalForceLongPolling to fix "Backend didn't respond" errors in cloud environments
+      window.__FIREBASE_DB__ = initializeFirestore(window.__FIREBASE_APP__, {
+        experimentalForceLongPolling: true,
+      });
       window.__FIREBASE_AUTH__ = getAuth(window.__FIREBASE_APP__);
     } catch (error) {
       // Fail silently to prevent dev overlay crash

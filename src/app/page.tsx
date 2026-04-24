@@ -147,9 +147,9 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-0 relative z-10">
-        <section className="w-full pt-48 pb-12 md:pt-64 md:pb-16 flex items-center justify-center">
+        <section className="w-full pt-32 pb-12 md:pt-40 md:pb-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-16 text-center">
+            <div className="flex flex-col items-center space-y-12 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -162,12 +162,12 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="space-y-8"
+                className="space-y-10"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-8xl max-w-[1200px] text-slate-900 leading-none">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl max-w-[1200px] text-slate-900 leading-[1.1]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
-                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
+                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm mt-12">
                   Experience the power of mutual aid. We leverage collective savings to provide members with bank-grade financial security, affordable credit, and shared annual dividends.
                 </p>
               </motion.div>
@@ -176,7 +176,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-4"
+                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-8"
               >
                 <Button asChild size="lg" className="h-16 px-12 text-lg font-black rounded-2xl bg-emerald-600 shadow-2xl shadow-emerald-200/50 hover:scale-[1.03] active:scale-[0.97] transition-all group">
                   <Link href="/register" className="flex items-center gap-2">
@@ -221,40 +221,44 @@ export default function Home() {
               <p className="text-lg text-slate-600 font-medium">Our products are designed to support your personal and professional milestones through ethical financial engineering.</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
               {[
                 { 
                   title: 'Thrift Savings', 
-                  icon: Coins, 
+                  icon: logoUrl, 
                   desc: 'Regular monthly contributions that build your borrowing power and capital base.',
                   features: ['3x Loan Multiplier', 'Compound Dividends', 'Easy Liquidations']
                 },
                 { 
                   title: 'Asset Financing', 
-                  icon: Building2, 
+                  icon: logoUrl, 
                   desc: 'Low-interest loans for land purchase, home construction, or business equipment.',
                   features: ['Up to 60 Months', 'Minimal Processing', 'Competitive Rates']
                 },
                 { 
                   title: 'Emergency Relief', 
-                  icon: ShieldAlert, 
+                  icon: logoUrl, 
                   desc: 'Quick-access funds for health, family, or urgent personal needs.',
                   features: ['24hr Disbursement', 'Zero Collateral', 'Flexible Repayment']
                 },
                 { 
                   title: 'Mutual Health', 
-                  icon: Heart, 
+                  icon: logoUrl, 
                   desc: 'Collaborative medical insurance scheme providing affordable care for all members.',
                   features: ['Family Coverage', 'Network of Clinics', 'Subsidized Premiums']
                 }
               ].map((product, i) => (
                 <motion.div 
                   key={i}
-                  whileHover={{ y: -10 }}
-                  className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col h-full group transition-all duration-500"
+                  whileHover={{ y: -5 }}
+                  className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col h-full group transition-all duration-300"
                 >
-                  <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-500">
-                    <product.icon className="w-8 h-8" />
+                  <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 transition-colors duration-300 overflow-hidden p-3">
+                    {product.icon ? (
+                      <img src={product.icon} alt={product.title} className="w-full h-full object-contain" />
+                    ) : (
+                      <ShieldCheck className="w-8 h-8 text-emerald-600 group-hover:text-white" />
+                    )}
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-4">{product.title}</h3>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-1">{product.desc}</p>

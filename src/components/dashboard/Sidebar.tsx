@@ -82,13 +82,13 @@ export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: Sid
         </nav>
         
         <div className="p-6 mt-auto">
-          <Link 
-            href="/login"
-            className="flex items-center gap-4 px-4 py-3 text-sm font-bold text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
+          <button 
+            onClick={() => window.location.href = '/login'}
+            className="w-full flex items-center gap-4 px-4 py-3 text-sm font-bold text-slate-500 hover:bg-red-50 hover:text-red-600 rounded-xl transition-all duration-200"
           >
             <LogOut className="w-5 h-5" />
             Sign Out Securely
-          </Link>
+          </button>
         </div>
       </aside>
 
