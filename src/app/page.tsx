@@ -118,7 +118,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" className="text-emerald-950">
                 <Menu className="w-8 h-8" />
               </Button>
-            </Trigger>
+            </SheetTrigger>
             <SheetContent side="right" className="bg-white border-none w-full p-0 z-[200]">
               <div className="p-8 h-full flex flex-col bg-white">
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">

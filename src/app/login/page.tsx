@@ -1,19 +1,21 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, Loader2, Sparkles, Mail, Lock, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { SystemSettings } from '@/lib/types';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function LoginPage() {
   const router = useRouter();
@@ -25,6 +27,9 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
+  const { data: settings } = useDoc<SystemSettings>(settingsRef);
+
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password) {
@@ -34,18 +39,17 @@ export default function LoginPage() {
 
     setLoading(true);
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth!, email, password);
       const user = userCredential.user;
 
-      // Fetch user role from Firestore
-      const userRef = doc(db, 'users', user.uid);
+      const userRef = doc(db!, 'users', user.uid);
       const userSnap = await getDoc(userRef);
 
       if (userSnap.exists()) {
         const userData = userSnap.data();
         
         if (userData.status === 'Pending') {
-          await signOut(auth);
+          await signOut(auth!);
           toast({ 
             variant: "destructive", 
             title: "Account Pending", 
@@ -55,12 +59,10 @@ export default function LoginPage() {
           return;
         }
 
-        // Store role for immediate UI feedback in layout
         localStorage.setItem('coopnest_role', userData.role || 'MEMBER');
         toast({ title: "Portal Access Granted", description: `Welcome back, ${userData.name || email}.` });
         router.push('/dashboard');
       } else {
-        // Handle case where auth user exists but no Firestore profile exists yet
         localStorage.setItem('coopnest_role', 'MEMBER');
         router.push('/dashboard');
       }
@@ -76,6 +78,9 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
+
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl;
+  const systemName = settings?.branding?.systemName || 'CoopNest';
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-emerald-50/40 p-4 relative overflow-hidden">
@@ -93,12 +98,16 @@ export default function LoginPage() {
         <Card className="border-emerald-100/50 shadow-2xl bg-white/95 backdrop-blur-2xl rounded-[3rem] overflow-hidden">
           <CardHeader className="space-y-4 text-center pt-12">
             <div className="flex justify-center">
-              <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200">
-                <ShieldCheck className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200 overflow-hidden">
+                {logoUrl ? (
+                  <img src={logoUrl} alt={systemName} className="w-full h-full object-cover" />
+                ) : (
+                  <ShieldCheck className="w-10 h-10 text-white" />
+                )}
               </div>
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">Member Portal</CardTitle>
+              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">{systemName}</CardTitle>
               <CardDescription className="text-base font-medium text-slate-500 px-4">
                 Enter your credentials to access the secure governance dashboard.
               </CardDescription>

@@ -1,19 +1,21 @@
 
 "use client"
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ShieldCheck, Loader2, Sparkles, Mail, Lock, User, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth, useFirestore } from '@/firebase';
+import { useAuth, useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
+import { SystemSettings } from '@/lib/types';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -26,6 +28,9 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [loading, setLoading] = useState(false);
 
+  const settingsRef = useMemoFirebase(() => db ? doc(db, 'settings', 'global') : null, [db]);
+  const { data: settings } = useDoc<SystemSettings>(settingsRef);
+
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !password || !name) {
@@ -35,11 +40,10 @@ export default function RegisterPage() {
 
     setLoading(true);
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth!, email, password);
       const user = userCredential.user;
 
-      // Create user profile in Firestore with 'Pending' status
-      await setDoc(doc(db, 'users', user.uid), {
+      await setDoc(doc(db!, 'users', user.uid), {
         name,
         email,
         role: 'MEMBER',
@@ -61,6 +65,9 @@ export default function RegisterPage() {
     }
   };
 
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl;
+  const systemName = settings?.branding?.systemName || 'CoopNest';
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-emerald-50/30 p-4 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none">
@@ -77,12 +84,16 @@ export default function RegisterPage() {
         <Card className="border-emerald-100/50 shadow-2xl bg-white/90 backdrop-blur-2xl rounded-[3rem] overflow-hidden">
           <CardHeader className="space-y-4 text-center pt-12">
             <div className="flex justify-center">
-              <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-emerald-700 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200">
-                <ShieldCheck className="w-10 h-10 text-white" />
+              <div className="w-20 h-20 bg-emerald-600 rounded-3xl flex items-center justify-center shadow-2xl shadow-emerald-200 overflow-hidden">
+                {logoUrl ? (
+                  <img src={logoUrl} alt={systemName} className="w-full h-full object-cover" />
+                ) : (
+                  <ShieldCheck className="w-10 h-10 text-white" />
+                )}
               </div>
             </div>
             <div className="space-y-2">
-              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">Join Society</CardTitle>
+              <CardTitle className="text-4xl font-headline font-black text-slate-900 tracking-tighter">Join {systemName}</CardTitle>
               <CardDescription className="text-base font-medium text-slate-500 px-4">
                 Apply for membership to access the cooperative portal.
               </CardDescription>
