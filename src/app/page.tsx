@@ -23,7 +23,10 @@ import {
   Lock,
   Globe,
   Award,
-  X
+  X,
+  PiggyBank,
+  Stethoscope,
+  Briefcase
 } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -144,13 +147,13 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-0 relative z-10">
-        <section className="w-full pt-32 pb-12 md:pt-40 md:pb-16 flex items-center justify-center">
+        <section className="w-full pt-24 pb-12 md:pt-32 md:pb-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-12 text-center">
+            <div className="flex flex-col items-center space-y-8 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mb-12"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-8"
               >
                 <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -159,9 +162,9 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="space-y-16"
+                className="space-y-12"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.05]">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-5xl max-w-[1200px] text-slate-900 leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
@@ -173,7 +176,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-8"
+                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-4"
               >
                 <Button asChild size="lg" className="h-16 px-12 text-lg font-black rounded-2xl bg-emerald-600 shadow-2xl shadow-emerald-200/50 hover:scale-[1.03] active:scale-[0.97] transition-all group">
                   <Link href="/register" className="flex items-center gap-2">
@@ -223,22 +226,26 @@ export default function Home() {
                 { 
                   title: 'Thrift Savings', 
                   desc: 'Regular monthly contributions that build your borrowing power and capital base.',
-                  features: ['3x Loan Multiplier', 'Compound Dividends', 'Easy Liquidations']
+                  features: ['3x Loan Multiplier', 'Compound Dividends', 'Easy Liquidations'],
+                  icon: PiggyBank
                 },
                 { 
                   title: 'Asset Financing', 
                   desc: 'Low-interest loans for land purchase, home construction, or business equipment.',
-                  features: ['Up to 60 Months', 'Minimal Processing', 'Competitive Rates']
+                  features: ['Up to 60 Months', 'Minimal Processing', 'Competitive Rates'],
+                  icon: Building2
                 },
                 { 
                   title: 'Emergency Relief', 
                   desc: 'Quick-access funds for health, family, or urgent personal needs.',
-                  features: ['24hr Disbursement', 'Zero Collateral', 'Flexible Repayment']
+                  features: ['24hr Disbursement', 'Zero Collateral', 'Flexible Repayment'],
+                  icon: ShieldAlert
                 },
                 { 
                   title: 'Mutual Health', 
                   desc: 'Collaborative medical insurance scheme providing affordable care for all members.',
-                  features: ['Family Coverage', 'Network of Clinics', 'Subsidized Premiums']
+                  features: ['Family Coverage', 'Network of Clinics', 'Subsidized Premiums'],
+                  icon: Stethoscope
                 }
               ].map((product, i) => (
                 <motion.div 
@@ -247,7 +254,7 @@ export default function Home() {
                   className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col group transition-all duration-300 h-full"
                 >
                   <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 transition-colors duration-300 overflow-hidden p-3">
-                     {logoUrl && <img src={logoUrl} alt={product.title} className="w-full h-full object-contain" />}
+                     <product.icon className="w-8 h-8 text-emerald-600 group-hover:text-white transition-colors" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-4">{product.title}</h3>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-1">{product.desc}</p>
@@ -306,7 +313,7 @@ export default function Home() {
                   <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
-                         {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain brightness-0 invert" />}
+                         {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>
@@ -449,7 +456,7 @@ export default function Home() {
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>
-              <p className="text-base text-slate-600 font-bold leading-relaxed max-w-sm">
+              <p className="text-base text-slate-600 font-bold leading-relaxed max-sm sm:max-w-sm">
                 A democratically governed financial ecosystem dedicated to the economic empowerment and mutual prosperity of its members through collective strength and ethical management.
               </p>
               <div className="flex gap-4">
