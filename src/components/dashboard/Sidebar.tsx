@@ -14,7 +14,8 @@ import {
   ShieldAlert,
   Wallet,
   Sparkles,
-  ChevronRight
+  ChevronRight,
+  ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { UserRole } from '@/lib/types';
@@ -50,7 +51,7 @@ export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: Sid
               {logoUrl ? (
                 <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
               ) : (
-                <Sparkles className="w-6 h-6 text-white" />
+                <ShieldCheck className="w-6 h-6 text-white" />
               )}
             </div>
             <span className="text-xl font-headline font-bold tracking-tighter truncate text-emerald-950">{systemName}</span>

@@ -6,7 +6,7 @@ import { useRouter, usePathname } from 'next/navigation';
 import { UserRole, SystemSettings } from '@/lib/types';
 import { DashboardSidebar } from '@/components/dashboard/Sidebar';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Bell, Mail, Sparkles, Menu, LogOut, Loader2, ChevronRight, LayoutDashboard, Wallet, Users, CreditCard, Search, ShieldAlert, Settings } from 'lucide-react';
+import { Bell, Mail, Sparkles, Menu, LogOut, Loader2, ChevronRight, LayoutDashboard, Wallet, Users, CreditCard, Search, ShieldAlert, Settings, ShieldCheck } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase, useAuth, useUser } from '@/firebase';
 import { doc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
@@ -61,7 +61,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
            {logoUrl ? (
              <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-bounce" />
            ) : (
-             <div className="w-full h-full bg-emerald-600 rounded-2xl animate-bounce" />
+             <ShieldCheck className="w-full h-full text-emerald-600 animate-bounce" />
            )}
         </div>
         <p className="font-black text-slate-800 tracking-tighter text-xl">Securing session...</p>
@@ -99,7 +99,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <SheetHeader className="p-8 text-left border-b border-emerald-50 bg-white">
                         <SheetTitle className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 shrink-0 overflow-hidden">
-                             {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
+                             {logoUrl ? (
+                               <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                             ) : (
+                               <ShieldCheck className="w-7 h-7 text-white" />
+                             )}
                           </div>
                           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
                         </SheetTitle>
@@ -144,7 +148,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Sheet>
                 <div className="flex items-center gap-2">
                    <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-100 overflow-hidden">
-                      {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
+                      {logoUrl ? (
+                        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                      ) : (
+                        <ShieldCheck className="w-5 h-5 text-white" />
+                      )}
                    </div>
                   <span className="font-black text-emerald-950 tracking-tighter text-lg">{systemName}</span>
                 </div>

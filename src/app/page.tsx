@@ -63,7 +63,7 @@ export default function Home() {
            {logoUrl ? (
              <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-pulse" />
            ) : (
-             <div className="w-full h-full bg-emerald-600 rounded-xl animate-pulse" />
+             <ShieldCheck className="w-full h-full text-emerald-600 animate-pulse" />
            )}
         </div>
       </div>
@@ -91,7 +91,11 @@ export default function Home() {
       }`}>
         <Link className="flex items-center gap-3 group" href="/">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform overflow-hidden">
-             {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
+             {logoUrl ? (
+               <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+             ) : (
+               <ShieldCheck className="w-6 h-6 text-white" />
+             )}
           </div>
           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
         </Link>
@@ -120,7 +124,11 @@ export default function Home() {
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                       {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
+                       {logoUrl ? (
+                         <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                       ) : (
+                         <ShieldCheck className="w-7 h-7 text-white" />
+                       )}
                     </div>
                     <SheetTitle className="text-3xl font-black text-emerald-950">{systemName}</SheetTitle>
                   </div>
@@ -313,7 +321,11 @@ export default function Home() {
                   <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
-                         {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
+                         {logoUrl ? (
+                           <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                         ) : (
+                           <ShieldCheck className="w-7 h-7 text-white" />
+                         )}
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>
@@ -380,7 +392,11 @@ export default function Home() {
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center overflow-hidden p-2">
-                 {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
+                 {logoUrl ? (
+                   <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                 ) : (
+                   <HelpCircle className="w-7 h-7 text-emerald-600" />
+                 )}
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
               <p className="text-slate-500 font-medium">Everything you need to know about joining and flourishing in our society.</p>
@@ -410,9 +426,12 @@ export default function Home() {
               ].map((faq, i) => (
                 <AccordionItem key={i} value={`faq-${i}`} className="border border-slate-200 bg-white rounded-2xl px-8 overflow-hidden">
                   <AccordionTrigger className="text-lg font-bold text-slate-800 hover:text-emerald-600 hover:no-underline py-6">
-                    {faq.q}
+                    <div className="flex items-center gap-3">
+                      <HelpCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                      {faq.q}
+                    </div>
                   </AccordionTrigger>
-                  <AccordionContent className="text-slate-500 font-medium leading-relaxed pb-8 pt-2">
+                  <AccordionContent className="text-slate-500 font-medium leading-relaxed pb-8 pt-2 pl-8">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -452,7 +471,11 @@ export default function Home() {
             <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center gap-3">
                  <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 overflow-hidden">
-                    {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
+                    {logoUrl ? (
+                      <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                    ) : (
+                      <ShieldCheck className="w-8 h-8 text-white" />
+                    )}
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>
