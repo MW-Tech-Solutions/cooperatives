@@ -21,7 +21,8 @@ import {
   Globe,
   Award,
   PiggyBank,
-  Stethoscope
+  Stethoscope,
+  Scale
 } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -77,9 +78,6 @@ export default function Home() {
         />
         <div className="absolute inset-0 bg-black/5" />
       </div>
-
-      {/* Glass transparent effect at the top */}
-      <div className="fixed top-0 left-0 right-0 h-64 bg-white/20 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,black_20%,transparent)] pointer-events-none" />
 
       <header className={`fixed top-0 left-0 right-0 h-20 flex items-center px-6 lg:px-16 z-[100] transition-all duration-300 ${
         isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
@@ -156,7 +154,7 @@ export default function Home() {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-12"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-[10px] md:text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-16 md:mt-24"
               >
                 <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -165,7 +163,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="space-y-6 md:space-y-12 pt-4 md:pt-8"
+                className="space-y-6 md:space-y-12 pt-8 md:pt-12"
               >
                 <h1 className="text-3xl font-headline font-black tracking-tighter sm:text-5xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.1] md:leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
