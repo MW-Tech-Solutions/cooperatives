@@ -13,6 +13,7 @@ import { signOut } from 'firebase/auth';
 import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -49,19 +50,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.push('/login');
   };
 
+  const defaultLogo = PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || '';
+  const systemName = settings?.branding?.systemName || 'CoopNest';
+  const logoUrl = settings?.branding?.logoUrl || defaultLogo;
+
   if (authLoading || (user && !role)) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
-        <div className="w-16 h-16 bg-emerald-600 rounded-3xl flex items-center justify-center animate-bounce shadow-xl shadow-emerald-200">
-           <Sparkles className="w-8 h-8 text-white" />
+        <div className="w-16 h-16 relative">
+           <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-bounce" />
         </div>
         <p className="font-black text-slate-800 tracking-tighter text-xl">Securing session...</p>
       </div>
     );
   }
-
-  const systemName = settings?.branding?.systemName || 'CoopNest';
-  const logoUrl = settings?.branding?.logoUrl || '';
 
   const navItems = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard, roles: ['PRESIDENT', 'ASSISTANT_PRESIDENT', 'SECRETARY_GENERAL', 'TREASURER', 'AUDITOR', 'MEMBER'] },
@@ -93,7 +95,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <SheetHeader className="p-8 text-left border-b border-emerald-50 bg-white">
                         <SheetTitle className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 shrink-0 overflow-hidden">
-                             {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <Sparkles className="w-7 h-7 text-white" />}
+                             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                           </div>
                           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
                         </SheetTitle>
@@ -138,11 +140,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Sheet>
                 <div className="flex items-center gap-2">
                    <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-100 overflow-hidden">
-                      {logoUrl ? (
-                        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
-                      ) : (
-                        <Sparkles className="w-5 h-5 text-white" />
-                      )}
+                      <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                    </div>
                   <span className="font-black text-emerald-950 tracking-tighter text-lg">{systemName}</span>
                 </div>

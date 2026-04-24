@@ -22,7 +22,8 @@ import {
   FileCheck2,
   Lock,
   Globe,
-  Award
+  Award,
+  X
 } from 'lucide-react';
 import { useFirestore, useDoc, useMemoFirebase } from '@/firebase';
 import { doc } from 'firebase/firestore';
@@ -48,19 +49,16 @@ export default function Home() {
   }, []);
 
   const systemName = settings?.branding?.systemName || 'CoopNest';
-  const logoUrl = settings?.branding?.logoUrl || '';
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || '';
   const heroBgImage = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl || '/coins-glass-jar-money-saving-financial-concept.jpg';
   const governanceImg = PlaceHolderImages.find(img => img.id === 'governance-img')?.imageUrl || '/4515.jpg';
 
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-emerald-50/50">
-        <motion.div 
-          animate={{ rotate: 360 }}
-          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-        >
-          <ShieldCheck className="w-12 h-12 text-emerald-600" />
-        </motion.div>
+        <div className="w-12 h-12 relative">
+           <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-pulse" />
+        </div>
       </div>
     );
   }
@@ -75,11 +73,10 @@ export default function Home() {
           className="w-full h-full object-cover"
           data-ai-hint="corporate background"
         />
-        {/* Darkening Overlay for readability */}
         <div className="absolute inset-0 bg-black/5" />
       </div>
 
-      {/* Glass transparent effect at the top of the wallpaper */}
+      {/* Glass transparent effect at the top */}
       <div className="fixed top-0 left-0 right-0 h-64 bg-white/20 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,black_20%,transparent)] pointer-events-none" />
 
       <header className={`fixed top-0 left-0 right-0 h-20 flex items-center px-6 lg:px-16 z-[100] transition-all duration-300 ${
@@ -87,11 +84,7 @@ export default function Home() {
       }`}>
         <Link className="flex items-center gap-3 group" href="/">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform overflow-hidden">
-            {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
-            ) : (
-              <ShieldCheck className="w-6 h-6 text-white" />
-            )}
+             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
           </div>
           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
         </Link>
@@ -120,7 +113,7 @@ export default function Home() {
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                      {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <ShieldCheck className="w-7 h-7 text-white" />}
+                       <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                     </div>
                     <SheetTitle className="text-3xl font-black text-emerald-950">{systemName}</SheetTitle>
                   </div>
@@ -162,12 +155,12 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 }}
-                className="space-y-10"
+                className="space-y-16"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl max-w-[1200px] text-slate-900 leading-[1.1]">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-[5.5rem] max-w-[1200px] text-slate-900 leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
-                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm mt-12">
+                <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
                   Experience the power of mutual aid. We leverage collective savings to provide members with bank-grade financial security, affordable credit, and shared annual dividends.
                 </p>
               </motion.div>
@@ -221,29 +214,25 @@ export default function Home() {
               <p className="text-lg text-slate-600 font-medium">Our products are designed to support your personal and professional milestones through ethical financial engineering.</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
               {[
                 { 
                   title: 'Thrift Savings', 
-                  icon: logoUrl, 
                   desc: 'Regular monthly contributions that build your borrowing power and capital base.',
                   features: ['3x Loan Multiplier', 'Compound Dividends', 'Easy Liquidations']
                 },
                 { 
                   title: 'Asset Financing', 
-                  icon: logoUrl, 
                   desc: 'Low-interest loans for land purchase, home construction, or business equipment.',
                   features: ['Up to 60 Months', 'Minimal Processing', 'Competitive Rates']
                 },
                 { 
                   title: 'Emergency Relief', 
-                  icon: logoUrl, 
                   desc: 'Quick-access funds for health, family, or urgent personal needs.',
                   features: ['24hr Disbursement', 'Zero Collateral', 'Flexible Repayment']
                 },
                 { 
                   title: 'Mutual Health', 
-                  icon: logoUrl, 
                   desc: 'Collaborative medical insurance scheme providing affordable care for all members.',
                   features: ['Family Coverage', 'Network of Clinics', 'Subsidized Premiums']
                 }
@@ -251,14 +240,10 @@ export default function Home() {
                 <motion.div 
                   key={i}
                   whileHover={{ y: -5 }}
-                  className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col h-full group transition-all duration-300"
+                  className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col group transition-all duration-300 h-full"
                 >
                   <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 transition-colors duration-300 overflow-hidden p-3">
-                    {product.icon ? (
-                      <img src={product.icon} alt={product.title} className="w-full h-full object-contain" />
-                    ) : (
-                      <ShieldCheck className="w-8 h-8 text-emerald-600 group-hover:text-white" />
-                    )}
+                     <img src={logoUrl} alt={product.title} className="w-full h-full object-contain" />
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-4">{product.title}</h3>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-1">{product.desc}</p>
@@ -269,7 +254,7 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                  <Button variant="outline" className="w-full rounded-2xl border-emerald-200 text-emerald-700 font-bold hover:bg-emerald-600 hover:text-white">Learn More</Button>
+                  <Button variant="outline" className="w-full rounded-2xl border-emerald-200 text-emerald-700 font-bold hover:bg-emerald-600 hover:text-white mt-auto">Learn More</Button>
                 </motion.div>
               ))}
             </div>
@@ -316,8 +301,8 @@ export default function Home() {
                   <img src={governanceImg} alt="Governance Meeting" className="w-full h-auto" />
                   <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center">
-                        <Lock className="w-6 h-6 text-white" />
+                      <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
+                         <img src={logoUrl} alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>
@@ -383,8 +368,8 @@ export default function Home() {
         <section className="w-full py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center">
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
-              <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
-                <HelpCircle className="w-6 h-6" />
+              <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center overflow-hidden p-2">
+                 <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
               <p className="text-slate-500 font-medium">Everything you need to know about joining and flourishing in our society.</p>
@@ -456,7 +441,7 @@ export default function Home() {
             <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center gap-3">
                  <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 overflow-hidden">
-                   {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <ShieldCheck className="w-7 h-7 text-white" />}
+                    <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>
