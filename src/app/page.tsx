@@ -80,10 +80,10 @@ export default function Home() {
       </div>
 
       {/* Glass transparent effect at the top of the wallpaper */}
-      <div className="fixed top-0 left-0 right-0 h-64 bg-white/10 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,black_20%,transparent)] pointer-events-none" />
+      <div className="fixed top-0 left-0 right-0 h-64 bg-white/20 backdrop-blur-2xl -z-10 [mask-image:linear-gradient(to_bottom,black_20%,transparent)] pointer-events-none" />
 
       <header className={`fixed top-0 left-0 right-0 h-20 flex items-center px-6 lg:px-16 z-[100] transition-all duration-300 ${
-        isScrolled ? 'bg-white/90 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
+        isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
       }`}>
         <Link className="flex items-center gap-3 group" href="/">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform">
@@ -112,25 +112,29 @@ export default function Home() {
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="text-emerald-950">
-                <Menu className="w-6 h-6" />
+                <Menu className="w-8 h-8" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-white border-emerald-100">
-              <SheetHeader className="text-left border-b border-emerald-50 pb-4">
-                <SheetTitle className="text-2xl font-black text-emerald-950">Society Menu</SheetTitle>
-                <SheetDescription>Explore our mission and access your portal.</SheetDescription>
-              </SheetHeader>
-              <div className="flex flex-col gap-6 pt-12">
-                <Link href="#mission" className="text-xl font-black text-emerald-950">Our Mission</Link>
-                <Link href="#products" className="text-xl font-black text-emerald-950">Our Services</Link>
-                <Link href="#governance" className="text-xl font-black text-emerald-950">Governance</Link>
-                <hr className="border-emerald-100" />
-                <Button asChild className="h-14 rounded-2xl bg-emerald-600 font-black text-lg">
-                  <Link href="/login">Member Login</Link>
-                </Button>
-                <Button asChild variant="outline" className="h-14 rounded-2xl border-emerald-200 font-bold">
-                  <Link href="/register">Become a Member</Link>
-                </Button>
+            <SheetContent side="right" className="bg-white border-emerald-100 w-[85vw] p-0 z-[200]">
+              <div className="p-8 h-full flex flex-col bg-white">
+                <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
+                  <SheetTitle className="text-3xl font-black text-emerald-950">Society Menu</SheetTitle>
+                  <SheetDescription className="font-bold text-emerald-600">Explore our mission & portal</SheetDescription>
+                </SheetHeader>
+                <div className="flex flex-col gap-8">
+                  <Link href="#mission" className="text-2xl font-black text-emerald-950 hover:text-emerald-600 transition-colors">Our Mission</Link>
+                  <Link href="#products" className="text-2xl font-black text-emerald-950 hover:text-emerald-600 transition-colors">Our Services</Link>
+                  <Link href="#governance" className="text-2xl font-black text-emerald-950 hover:text-emerald-600 transition-colors">Governance</Link>
+                  <hr className="border-emerald-100" />
+                  <div className="flex flex-col gap-4 mt-4">
+                    <Button asChild className="h-16 rounded-2xl bg-emerald-600 font-black text-xl shadow-lg shadow-emerald-200">
+                      <Link href="/login">Member Login</Link>
+                    </Button>
+                    <Button asChild variant="outline" className="h-16 rounded-2xl border-emerald-200 font-black text-xl text-emerald-700">
+                      <Link href="/register">Join Society</Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
             </SheetContent>
           </Sheet>
@@ -138,15 +142,15 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-0 relative z-10">
-        <section className="w-full py-12 md:py-16 flex items-center justify-center">
+        <section className="w-full pt-32 pb-12 md:pt-48 md:pb-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/80 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-sm backdrop-blur-sm"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md"
               >
-                <Award className="w-3.5 h-3.5 text-emerald-600" /> Established Since 2018
+                <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
               
               <motion.div 
@@ -155,7 +159,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-8"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl max-w-[1000px] text-slate-900 leading-tight">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-8xl max-w-[1200px] text-slate-900 leading-none">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
@@ -167,7 +171,7 @@ export default function Home() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center"
+                className="flex flex-col sm:flex-row gap-6 w-full max-w-lg justify-center pt-4"
               >
                 <Button asChild size="lg" className="h-16 px-12 text-lg font-black rounded-2xl bg-emerald-600 shadow-2xl shadow-emerald-200/50 hover:scale-[1.03] active:scale-[0.97] transition-all group">
                   <Link href="/register" className="flex items-center gap-2">
@@ -182,7 +186,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="impact" className="w-full py-20 bg-emerald-950/90 backdrop-blur-md text-white flex items-center justify-center overflow-hidden relative">
+        <section id="impact" className="w-full py-20 bg-emerald-950/95 backdrop-blur-lg text-white flex items-center justify-center overflow-hidden relative">
           <div className="container px-4 md:px-6 relative z-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
               {[
@@ -200,7 +204,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="products" className="w-full py-32 bg-white/95 backdrop-blur-sm flex items-center justify-center border-t border-emerald-100">
+        <section id="products" className="w-full py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-t border-emerald-100">
           <div className="container px-4 md:px-6">
             <div className="text-center max-w-3xl mx-auto mb-20 space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[10px] font-black uppercase tracking-[0.2em]">
@@ -263,7 +267,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section id="governance" className="w-full py-32 bg-slate-50/95 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border-y border-emerald-100">
+        <section id="governance" className="w-full py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center relative overflow-hidden border-y border-emerald-100">
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col lg:flex-row gap-20 items-center">
               <div className="flex-1 space-y-10">
@@ -316,7 +320,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-32 bg-white/95 backdrop-blur-sm flex items-center justify-center border-b border-emerald-100">
+        <section className="w-full py-32 bg-white/98 backdrop-blur-sm flex items-center justify-center border-b border-emerald-100">
           <div className="container px-4 md:px-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
               <div className="order-2 md:order-1">
@@ -367,7 +371,7 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="w-full py-32 bg-slate-50/95 backdrop-blur-sm flex items-center justify-center">
+        <section className="w-full py-32 bg-slate-50/98 backdrop-blur-sm flex items-center justify-center">
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
@@ -414,7 +418,7 @@ export default function Home() {
 
         <section className="w-full py-24 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="bg-emerald-600/90 backdrop-blur-md rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
+            <div className="bg-emerald-600/95 backdrop-blur-lg rounded-[3rem] p-12 md:p-24 text-white text-center space-y-10 relative overflow-hidden shadow-2xl shadow-emerald-200">
               <div className="absolute top-0 right-0 opacity-10 pointer-events-none">
                 <Sparkles className="w-[400px] h-[400px]" />
               </div>
@@ -437,7 +441,7 @@ export default function Home() {
         </section>
       </main>
 
-      <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/90 backdrop-blur-md">
+      <footer className="py-24 w-full px-6 md:px-16 border-t border-emerald-100/50 bg-emerald-50/95 backdrop-blur-md">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
             <div className="col-span-1 md:col-span-2 space-y-8">
