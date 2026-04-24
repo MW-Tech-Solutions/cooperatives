@@ -115,7 +115,7 @@ export default function Home() {
                 <Menu className="w-6 h-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-white/95 backdrop-blur-xl border-emerald-100">
+            <SheetContent side="right" className="bg-white border-emerald-100">
               <SheetHeader className="text-left border-b border-emerald-50 pb-4">
                 <SheetTitle className="text-2xl font-black text-emerald-950">Society Menu</SheetTitle>
                 <SheetDescription>Explore our mission and access your portal.</SheetDescription>
@@ -137,7 +137,7 @@ export default function Home() {
         </div>
       </header>
 
-      <main className="flex-1 pt-4 relative z-10">
+      <main className="flex-1 pt-0 relative z-10">
         <section className="w-full py-12 md:py-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center space-y-12 text-center">
@@ -155,7 +155,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-8"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-5xl lg:text-5xl max-w-[1000px] text-slate-900 leading-tight">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl max-w-[1000px] text-slate-900 leading-tight">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
