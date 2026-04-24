@@ -24,7 +24,7 @@ import { motion } from 'framer-motion';
 interface SidebarProps {
   role: UserRole;
   systemName?: string;
-  logoUrl?: string;
+  logoUrl?: string | null;
 }
 
 export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: SidebarProps) {

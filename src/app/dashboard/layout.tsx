@@ -82,7 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen bg-white">
-      <DashboardSidebar role={role || 'MEMBER'} systemName={systemName} logoUrl={logoUrl || ''} />
+      <DashboardSidebar role={role || 'MEMBER'} systemName={systemName} logoUrl={logoUrl} />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-20 border-b border-emerald-50 bg-white/95 backdrop-blur-md flex items-center justify-between px-4 sm:px-10 sticky top-0 z-[100]">
           <div className="flex items-center gap-6">

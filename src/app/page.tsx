@@ -68,7 +68,6 @@ export default function Home() {
 
   return (
     <div className="flex flex-col min-h-screen relative">
-      {/* Background Wallpaper */}
       <div className="fixed inset-0 -z-20 w-full h-full">
         <img 
           src={heroBgImage} 
@@ -313,7 +312,11 @@ export default function Home() {
                   <div className="absolute bottom-6 md:bottom-10 left-6 md:left-10 right-6 md:right-10 p-6 md:p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
-                         <Lock className="w-7 h-7 text-white" />
+                         {logoUrl ? (
+                           <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                         ) : (
+                           <Lock className="w-7 h-7 text-white" />
+                         )}
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>

@@ -79,7 +79,7 @@ export default function LoginPage() {
     }
   };
 
-  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl;
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || null;
   const systemName = settings?.branding?.systemName || 'CoopNest';
 
   return (

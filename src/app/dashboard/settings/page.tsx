@@ -75,16 +75,24 @@ export default function CommandCenter() {
     try {
       const res = await uploadLogo(formData);
       if (res.success) {
-        // Update local state
         const newLogoUrl = res.url!;
+        
+        // Update local state
         setForm(prev => ({
           ...prev,
-          branding: { ...prev.branding!, logoUrl: newLogoUrl }
+          branding: { 
+            ...(prev.branding || { systemName: 'CoopNest' }), 
+            logoUrl: newLogoUrl 
+          }
         }));
         
-        // Save immediately to Firestore to ensure global updates
+        // Save immediately to Firestore using the most current data to ensure global updates
+        const currentBranding = settingsData?.branding || { systemName: 'CoopNest' };
         await setDoc(settingsRef, {
-          branding: { ...form.branding, logoUrl: newLogoUrl },
+          branding: { 
+            ...currentBranding, 
+            logoUrl: newLogoUrl 
+          },
           updatedAt: serverTimestamp()
         }, { merge: true });
 
