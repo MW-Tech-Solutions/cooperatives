@@ -88,12 +88,12 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <Menu className="w-8 h-8" />
                     </button>
                   </SheetTrigger>
-                  <SheetContent side="left" className="w-[85vw] p-0 bg-white border-r border-emerald-100 z-[200]">
+                  <SheetContent side="left" className="w-full p-0 bg-white border-none z-[200]">
                     <div className="flex flex-col h-full bg-white">
                       <SheetHeader className="p-8 text-left border-b border-emerald-50 bg-white">
                         <SheetTitle className="flex items-center gap-3">
-                          <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 shrink-0">
-                             {logoUrl ? <img src={logoUrl} alt="Logo" className="w-7 h-7" /> : <Sparkles className="w-7 h-7 text-white" />}
+                          <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 shrink-0 overflow-hidden">
+                             {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <Sparkles className="w-7 h-7 text-white" />}
                           </div>
                           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
                         </SheetTitle>
@@ -137,13 +137,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                   </SheetContent>
                 </Sheet>
                 <div className="flex items-center gap-2">
-                   {logoUrl ? (
-                    <img src={logoUrl} alt="Logo" className="w-8 h-8 rounded-lg" />
-                  ) : (
-                    <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-100">
-                      <Sparkles className="w-5 h-5 text-white" />
-                    </div>
-                  )}
+                   <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-100 overflow-hidden">
+                      {logoUrl ? (
+                        <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                      ) : (
+                        <Sparkles className="w-5 h-5 text-white" />
+                      )}
+                   </div>
                   <span className="font-black text-emerald-950 tracking-tighter text-lg">{systemName}</span>
                 </div>
              </div>

@@ -86,9 +86,9 @@ export default function Home() {
         isScrolled ? 'bg-white/95 backdrop-blur-xl shadow-lg border-b border-emerald-100/50' : 'bg-transparent'
       }`}>
         <Link className="flex items-center gap-3 group" href="/">
-          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform">
+          <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform overflow-hidden">
             {logoUrl ? (
-              <img src={logoUrl} alt="Logo" className="w-6 h-6 rounded" />
+              <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
             ) : (
               <ShieldCheck className="w-6 h-6 text-white" />
             )}
@@ -115,10 +115,15 @@ export default function Home() {
                 <Menu className="w-8 h-8" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="bg-white border-emerald-100 w-[85vw] p-0 z-[200]">
+            <SheetContent side="right" className="bg-white border-none w-full p-0 z-[200]">
               <div className="p-8 h-full flex flex-col bg-white">
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
-                  <SheetTitle className="text-3xl font-black text-emerald-950">Society Menu</SheetTitle>
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
+                      {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <ShieldCheck className="w-7 h-7 text-white" />}
+                    </div>
+                    <SheetTitle className="text-3xl font-black text-emerald-950">{systemName}</SheetTitle>
+                  </div>
                   <SheetDescription className="font-bold text-emerald-600">Explore our mission & portal</SheetDescription>
                 </SheetHeader>
                 <div className="flex flex-col gap-8">
@@ -142,9 +147,9 @@ export default function Home() {
       </header>
 
       <main className="flex-1 pt-0 relative z-10">
-        <section className="w-full pt-32 pb-12 md:pt-48 md:pb-16 flex items-center justify-center">
+        <section className="w-full pt-48 pb-12 md:pt-64 md:pb-16 flex items-center justify-center">
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center space-y-12 text-center">
+            <div className="flex flex-col items-center space-y-16 text-center">
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -446,8 +451,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-20">
             <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center gap-3">
-                 <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200">
-                   <ShieldCheck className="w-7 h-7 text-white" />
+                 <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 overflow-hidden">
+                   {logoUrl ? <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" /> : <ShieldCheck className="w-7 h-7 text-white" />}
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>

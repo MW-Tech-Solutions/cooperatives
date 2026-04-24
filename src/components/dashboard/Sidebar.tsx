@@ -46,9 +46,9 @@ export function DashboardSidebar({ role, systemName = 'CoopNest', logoUrl }: Sid
       <aside className="w-72 glass-sidebar hidden md:flex flex-col h-screen sticky top-0 z-50">
         <div className="p-8">
           <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 shrink-0">
+            <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 shrink-0 overflow-hidden">
               {logoUrl ? (
-                <img src={logoUrl} alt="Logo" className="w-6 h-6 rounded" />
+                <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
               ) : (
                 <Sparkles className="w-6 h-6 text-white" />
               )}
