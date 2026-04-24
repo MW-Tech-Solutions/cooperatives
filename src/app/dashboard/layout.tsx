@@ -50,7 +50,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.push('/login');
   };
 
-  const defaultLogo = PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || '';
+  const defaultLogo = PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || null;
   const systemName = settings?.branding?.systemName || 'CoopNest';
   const logoUrl = settings?.branding?.logoUrl || defaultLogo;
 
@@ -58,7 +58,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-background gap-4">
         <div className="w-16 h-16 relative">
-           <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-bounce" />
+           {logoUrl ? (
+             <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-bounce" />
+           ) : (
+             <div className="w-full h-full bg-emerald-600 rounded-2xl animate-bounce" />
+           )}
         </div>
         <p className="font-black text-slate-800 tracking-tighter text-xl">Securing session...</p>
       </div>
@@ -79,7 +83,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className="flex min-h-screen bg-white">
-      <DashboardSidebar role={role || 'MEMBER'} systemName={systemName} logoUrl={logoUrl} />
+      <DashboardSidebar role={role || 'MEMBER'} systemName={systemName} logoUrl={logoUrl || ''} />
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-20 border-b border-emerald-50 bg-white/95 backdrop-blur-md flex items-center justify-between px-4 sm:px-10 sticky top-0 z-[100]">
           <div className="flex items-center gap-6">
@@ -95,7 +99,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                       <SheetHeader className="p-8 text-left border-b border-emerald-50 bg-white">
                         <SheetTitle className="flex items-center gap-3">
                           <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 shrink-0 overflow-hidden">
-                             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                             {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
                           </div>
                           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
                         </SheetTitle>
@@ -140,7 +144,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 </Sheet>
                 <div className="flex items-center gap-2">
                    <div className="w-8 h-8 bg-emerald-600 rounded-lg flex items-center justify-center shadow-md shadow-emerald-100 overflow-hidden">
-                      <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                      {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
                    </div>
                   <span className="font-black text-emerald-950 tracking-tighter text-lg">{systemName}</span>
                 </div>

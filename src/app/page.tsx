@@ -49,7 +49,7 @@ export default function Home() {
   }, []);
 
   const systemName = settings?.branding?.systemName || 'CoopNest';
-  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || '';
+  const logoUrl = settings?.branding?.logoUrl || PlaceHolderImages.find(img => img.id === 'logo')?.imageUrl || null;
   const heroBgImage = PlaceHolderImages.find(img => img.id === 'hero-bg')?.imageUrl || '/coins-glass-jar-money-saving-financial-concept.jpg';
   const governanceImg = PlaceHolderImages.find(img => img.id === 'governance-img')?.imageUrl || '/4515.jpg';
 
@@ -57,7 +57,11 @@ export default function Home() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-emerald-50/50">
         <div className="w-12 h-12 relative">
-           <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-pulse" />
+           {logoUrl ? (
+             <img src={logoUrl} alt="Loading" className="w-full h-full object-contain animate-pulse" />
+           ) : (
+             <div className="w-full h-full bg-emerald-600 rounded-xl animate-pulse" />
+           )}
         </div>
       </div>
     );
@@ -84,7 +88,7 @@ export default function Home() {
       }`}>
         <Link className="flex items-center gap-3 group" href="/">
           <div className="w-10 h-10 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200 group-hover:scale-105 transition-transform overflow-hidden">
-             <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+             {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
           </div>
           <span className="text-2xl font-headline font-black tracking-tighter text-emerald-950">{systemName}</span>
         </Link>
@@ -113,7 +117,7 @@ export default function Home() {
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
                   <div className="flex items-center gap-3 mb-2">
                     <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center shadow-lg overflow-hidden">
-                       <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                       {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
                     </div>
                     <SheetTitle className="text-3xl font-black text-emerald-950">{systemName}</SheetTitle>
                   </div>
@@ -146,7 +150,7 @@ export default function Home() {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mb-12"
               >
                 <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -157,7 +161,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-16"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-[5.5rem] max-w-[1200px] text-slate-900 leading-[1.05]">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
@@ -243,7 +247,7 @@ export default function Home() {
                   className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col group transition-all duration-300 h-full"
                 >
                   <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 transition-colors duration-300 overflow-hidden p-3">
-                     <img src={logoUrl} alt={product.title} className="w-full h-full object-contain" />
+                     {logoUrl && <img src={logoUrl} alt={product.title} className="w-full h-full object-contain" />}
                   </div>
                   <h3 className="text-2xl font-black text-slate-900 mb-4">{product.title}</h3>
                   <p className="text-slate-500 text-sm font-medium leading-relaxed mb-8 flex-1">{product.desc}</p>
@@ -302,7 +306,7 @@ export default function Home() {
                   <div className="absolute bottom-10 left-10 right-10 p-8 bg-white/90 backdrop-blur-md rounded-[2rem] border border-emerald-100 shadow-2xl">
                     <div className="flex items-center gap-4 mb-4">
                       <div className="w-12 h-12 bg-emerald-600 rounded-xl flex items-center justify-center overflow-hidden p-2">
-                         <img src={logoUrl} alt="Logo" className="w-full h-full object-contain brightness-0 invert" />
+                         {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain brightness-0 invert" />}
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
                     </div>
@@ -369,7 +373,7 @@ export default function Home() {
           <div className="container px-4 md:px-6 max-w-4xl">
             <div className="flex flex-col items-center text-center gap-4 mb-16">
               <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center overflow-hidden p-2">
-                 <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
+                 {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />}
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
               <p className="text-slate-500 font-medium">Everything you need to know about joining and flourishing in our society.</p>
@@ -441,7 +445,7 @@ export default function Home() {
             <div className="col-span-1 md:col-span-2 space-y-8">
               <div className="flex items-center gap-3">
                  <div className="w-12 h-12 bg-emerald-600 rounded-2xl flex items-center justify-center shadow-xl shadow-emerald-200 overflow-hidden">
-                    <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />
+                    {logoUrl && <img src={logoUrl} alt="Logo" className="w-full h-full object-cover" />}
                  </div>
                  <span className="font-headline font-black text-3xl text-emerald-950">{systemName}</span>
               </div>
