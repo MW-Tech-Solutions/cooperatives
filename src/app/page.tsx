@@ -14,7 +14,7 @@ import {
   Sparkles,
   Target,
   ShieldAlert,
-  HelpCircle,
+  CircleHelp,
   Plus,
   Coins,
   Scale,
@@ -118,7 +118,7 @@ export default function Home() {
               <Button variant="ghost" size="icon" className="text-emerald-950">
                 <Menu className="w-8 h-8" />
               </Button>
-            </SheetTrigger>
+            </Trigger>
             <SheetContent side="right" className="bg-white border-none w-full p-0 z-[200]">
               <div className="p-8 h-full flex flex-col bg-white">
                 <SheetHeader className="text-left border-b border-emerald-50 pb-6 mb-8">
@@ -161,7 +161,7 @@ export default function Home() {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-8"
+                className="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/90 text-emerald-800 text-xs font-black uppercase tracking-[0.2em] border border-emerald-200 shadow-md backdrop-blur-md mt-12"
               >
                 <Award className="w-4 h-4 text-emerald-600" /> Established Since 2018
               </motion.div>
@@ -172,7 +172,7 @@ export default function Home() {
                 transition={{ delay: 0.1 }}
                 className="space-y-12"
               >
-                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-6xl lg:text-5xl max-w-[1200px] text-slate-900 leading-[1.05]">
+                <h1 className="text-4xl font-headline font-black tracking-tighter sm:text-5xl md:text-7xl lg:text-7xl max-w-[1200px] text-slate-900 leading-[1.05]">
                   Secure Your Future <br /><span className="text-emerald-600">Collective Prosperity</span>
                 </h1>
                 <p className="mx-auto max-w-[800px] text-slate-700 font-bold md:text-xl lg:text-2xl leading-relaxed drop-shadow-sm">
@@ -258,7 +258,6 @@ export default function Home() {
               ].map((product, i) => (
                 <motion.div 
                   key={i}
-                  whileHover={{ y: -5 }}
                   className="p-8 rounded-[2.5rem] bg-emerald-50/50 border border-emerald-100 flex flex-col group transition-all duration-300 h-full"
                 >
                   <div className="w-16 h-16 bg-white rounded-3xl flex items-center justify-center mb-8 shadow-xl shadow-emerald-200 group-hover:bg-emerald-600 transition-colors duration-300 overflow-hidden p-3">
@@ -324,7 +323,7 @@ export default function Home() {
                          {logoUrl ? (
                            <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
                          ) : (
-                           <ShieldCheck className="w-7 h-7 text-white" />
+                           <Lock className="w-7 h-7 text-white" />
                          )}
                       </div>
                       <h4 className="font-black text-slate-900">Encrypted Governance</h4>
@@ -395,7 +394,7 @@ export default function Home() {
                  {logoUrl ? (
                    <img src={logoUrl} alt="Logo" className="w-full h-full object-contain" />
                  ) : (
-                   <HelpCircle className="w-7 h-7 text-emerald-600" />
+                   <CircleHelp className="w-7 h-7 text-emerald-600" />
                  )}
               </div>
               <h2 className="text-4xl md:text-5xl font-black text-slate-900">Member FAQ</h2>
@@ -427,7 +426,7 @@ export default function Home() {
                 <AccordionItem key={i} value={`faq-${i}`} className="border border-slate-200 bg-white rounded-2xl px-8 overflow-hidden">
                   <AccordionTrigger className="text-lg font-bold text-slate-800 hover:text-emerald-600 hover:no-underline py-6">
                     <div className="flex items-center gap-3">
-                      <HelpCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                      <CircleHelp className="w-5 h-5 text-emerald-600 shrink-0" />
                       {faq.q}
                     </div>
                   </AccordionTrigger>

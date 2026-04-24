@@ -12,8 +12,8 @@ import { join } from 'path';
  */
 export async function uploadLogo(formData: FormData) {
   const file = formData.get('logo') as File;
-  if (!file) {
-    return { success: false, error: 'No file provided' };
+  if (!file || !(file instanceof File)) {
+    return { success: false, error: 'Invalid or missing file provided' };
   }
 
   try {
@@ -24,7 +24,7 @@ export async function uploadLogo(formData: FormData) {
     const uploadDir = join(process.cwd(), 'public', 'uploads');
     await mkdir(uploadDir, { recursive: true });
 
-    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`;
+    const fileName = `${Date.now()}-${file.name.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9.-]/g, '')}`;
     const path = join(uploadDir, fileName);
     
     await writeFile(path, buffer);
@@ -34,7 +34,7 @@ export async function uploadLogo(formData: FormData) {
       url: `/uploads/${fileName}` 
     };
   } catch (error: any) {
-    console.error('Upload error:', error);
-    return { success: false, error: error.message };
+    console.error('Upload action error:', error);
+    return { success: false, error: `Upload processing failed: ${error.message}` };
   }
 }

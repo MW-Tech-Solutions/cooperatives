@@ -25,7 +25,8 @@ import {
   ShieldCheck,
   Upload,
   Image as ImageIcon,
-  Key
+  Key,
+  CircleHelp
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { SystemSettings, LoanType } from '@/lib/types';
@@ -85,7 +86,7 @@ export default function CommandCenter() {
         toast({ variant: "destructive", title: "Upload Failed", description: res.error });
       }
     } catch (err: any) {
-      toast({ variant: "destructive", title: "Error", description: err.message });
+      toast({ variant: "destructive", title: "Error", description: err.message || "Failed to communicate with server." });
     } finally {
       setUploadingLogo(false);
     }
@@ -195,7 +196,7 @@ export default function CommandCenter() {
                     {form.branding?.logoUrl ? (
                       <img src={form.branding.logoUrl} alt="Preview" className="w-full h-full object-contain p-4" />
                     ) : (
-                      <ImageIcon className="w-10 h-10 text-slate-300" />
+                      <ShieldCheck className="w-10 h-10 text-slate-300" />
                     )}
                     {uploadingLogo && (
                       <div className="absolute inset-0 bg-white/80 flex items-center justify-center">

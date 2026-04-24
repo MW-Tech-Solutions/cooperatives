@@ -14,7 +14,25 @@
         "autoDebitDate": { "type": "number", "description": "Day of the month for auto-debits." },
         "paystackPublicKey": { "type": "string", "description": "Paystack API Public Key." },
         "paystackSecretKey": { "type": "string", "description": "Paystack API Secret Key." },
-        "isAutoDebitActive": { "type": "boolean" }
+        "isAutoDebitActive": { "type": "boolean" },
+        "branding": {
+          "type": "object",
+          "properties": {
+            "systemName": { "type": "string" },
+            "logoUrl": { "type": "string" }
+          }
+        },
+        "smtp": {
+          "type": "object",
+          "properties": {
+            "host": { "type": "string" },
+            "port": { "type": "number" },
+            "user": { "type": "string" },
+            "pass": { "type": "string" },
+            "fromName": { "type": "string" },
+            "fromEmail": { "type": "string" }
+          }
+        }
       }
     },
     "UserProfile": {
